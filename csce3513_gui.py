@@ -4,4 +4,4 @@
 if __name__ == '__main__':
 	from csce3513_project import Page
 
-	Page()
+	Page.Page()
