@@ -25,26 +25,46 @@ class Page():
         self.page_dictionary = {}
         self.page.append(self.page_dictionary)
 
-        # creating empty lists
-        self.page[1]["leftFrame"] = [0] * 16
-        self.page[1]["middleFrame"] = [0] * 16
-        self.page[1]["rightFrame"] = [0] * 16
+        # creating empty dictionaries for things inside the window
+        self.page[1]["LeftFrame"] = {}
+        self.page[1]["MiddleFrame"] = {}
+        self.page[1]["RightFrame"] = {}
+        
+        self.temp_list = ["LeftFrame", "MiddleFrame", "RightFrame"]
+        # changed from lists to dictionary
+        # hierarchy is list -> dictionary -> dictionary -> objects/lists of objects
+        for k in self.temp_list:
+                self.page[1][k]["Frame"] = Frame(self.page[0])
+                print(k)
+                self.page[1][k]["Frame"].pack(side=LEFT)
+        self.temp_list = ["LeftFrame", "RightFrame"]
+        for k in self.temp_list:
+            self.page[1][k]["PlayerIDLabelList"] = [0] * 15
+            self.page[1][k]["PlayerNameLabelList"] = [0] * 15
+            for n in range(0,15):
+                self.page[1][k]["PlayerIDLabelList"][n] = Label(self.page[1][k]["Frame"],
+                                                                text="Empty Player ID")
+                self.page[1][k]["PlayerIDLabelList"][n].grid(row = n, column = 0)
+                self.page[1][k]["PlayerNameLabelList"][n] = Label(self.page[1][k]["Frame"],
+                                                                text="Empty Player Name")           
+                self.page[1][k]["PlayerNameLabelList"][n].grid(row = n, column = 1)
+        
+        #creation of middle Frame
 
-        # each dictionary element lead to a list of first the frame, then a list of everything within the frame
-        # a different method would be for the dictionary to lead to a list which the first element would be the frame
-        # then each additional element after the first would be a list containing only homogenous objects
-        # a list of the buttons on that frame
-        # a list of the labels on that frame, etc.
-        for k in self.page[1]:
-            self.page[1][k][0] = Frame(self.page[0])
-            self.page[1][k][0].pack(side=LEFT)
-
+        self.page[1]["MiddleFrame"]["Player Entry Button"] = Button(text="Enter New Player")
+        self.page[1]["MiddleFrame"]["Player Entry Button"].pack()
         # tester loop to populate the page with buttons
-        for k in self.page[1]:
+        #for k in self.page[1]:
            # for n in range(1,16):
             #    self.page[1][k][n] = Button(self.page[1][k][0], text = "Button " + str(n), command = self.print(row = n,column = 0,key = k))
             #   self.page[1][k][n].grid(row = n, column = 0)
-            for n in range(1, 16):
-                self.page[1][k][n] = Player_Button()
-                self.page[1][k][n].create(self.page[1][k][0], n, 0)
+         #   for n in range(0, 15):
+          #      self.page[1][k]["ButtonList"][n] = Player_Button()
+           #     self.page[1][k]["ButtonList"][n].create(self.page[1][k]["Frame"], n, 0)
+
+
+
+
+
         self.page[0].mainloop()
+
