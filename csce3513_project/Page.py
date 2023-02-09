@@ -59,7 +59,8 @@ class Page():
                     id_found = True
         if id_found == True:
             #removes the slot that is found from the player list
-            self.team_dictionary[team_color][slot_number].pop()
+            #pop method is supposed to remove the selected index from the list
+            self.team_dictionary[team_color].pop(slot_number)
             #adds a new empty entry at the bottom of the list
             self.team_dictionary[team_color].append([0] * 3)
             #initializes the slot info
@@ -95,6 +96,7 @@ class Page():
         #-------------------------------------
         self.page = [0]
         self.page[0] = self.root
+        self.page[0].geometry("800x600")
         # as well as the dictionary of all elements within the outermost layer
         self.page_dictionary = {}
         self.page.append(self.page_dictionary)
