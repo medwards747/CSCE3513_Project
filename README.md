@@ -72,3 +72,60 @@ pip3 freeze > requirements.txt
 ```
 
 Then make sure any unnecessary dependencies are removed from `requirements.txt`.
+
+### Writing tests
+
+1. Create a new file in the `tests` directory named `test_<class>.py`
+2. Add the following to the top of the file:
+
+   ```python
+   import unittest
+   from csce3513 import <class>
+   ```
+
+3. Create a new class that inherits from `unittest.TestCase` named `Test<ClassName>`
+4. Add test methods to the class (use assertions to test the code)
+
+   ```python
+   def test_<method>(self):
+       self.assertEqual(<expected>, <actual>)
+   ```
+
+5. At the bottom of the file, add the following:
+
+   ```python
+   if __name__ == '__main__':
+       unittest.main()
+   ```
+
+### Running tests
+
+```bash
+python3 -m unittest
+```
+
+#### Running tests for specific files
+
+```bash
+python3 -m unittest tests/test_<file>.py
+```
+
+```bash
+python3 -m unittest tests.test_<file>
+```
+
+Don't include the `.py` extension in the second way.
+
+#### Running tests for specific classes
+
+Don't include the `.py` extension for the file.
+
+```bash
+python3 -m unittest tests.test_<file>.Test<class>
+```
+
+#### Running tests for specific methods
+
+```bash
+python3 -m unittest tests.test_<class>.Test<ClassName>.test_<method>
+```
