@@ -65,8 +65,8 @@ class NetworkReceiver:
             listen_address -- IP address or hostname to listen on. (default: {'0.0.0.0'})
             listen_port -- Port to listen on. (default: {7501})
         """
-        self.listen_address = listen_address
-        self.listen_port = listen_port
+        self._listen_address = listen_address
+        self._listen_port = listen_port
         self._run = True
         self._manager = multiprocessing.Manager()
         self._stop_flag = self._manager.Value("B", 0)
@@ -82,7 +82,7 @@ class NetworkReceiver:
         Runs until the stop flag is set then closes the socket.
         """
         self._s = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
-        self._s.bind((self.listen_address, self.listen_port))
+        self._s.bind((self._listen_address, self._listen_port))
 
         while not self._stop_flag.value:
             ready_to_read, _, _ = select.select([self._s], [], [], 0.5)
@@ -98,23 +98,23 @@ class NetworkReceiver:
         """Start the receiver in a separate process.
         """
         self._logger.debug(
-            f"Network receiver starting on {self.listen_address}:{self.listen_port}")
+            f"Network receiver starting on {self._listen_address}:{self._listen_port}")
         self._t = multiprocessing.Process(target=self._rx)
 
         self._t.start()
 
         self._logger.debug(
-            f"Network receiver started on {self.listen_address}:{self.listen_port}")
+            f"Network receiver started on {self._listen_address}:{self._listen_port}")
 
     def stop_rx(self) -> None:
         """Stop the receiver process. Blocks until the receiver is stopped.
         """
         self._logger.debug(
-            f"Network receiver stopping on {self.listen_address}:{self.listen_port}")
+            f"Network receiver stopping on {self._listen_address}:{self._listen_port}")
         self._stop_flag.value = 1
         self._t.join()
         self._logger.debug(
-            f"Network receiver stopped on {self.listen_address}:{self.listen_port}")
+            f"Network receiver stopped on {self._listen_address}:{self._listen_port}")
 
     def process_result(self, block: bool = False, timeout: Union[float, None] = None) -> Union[tuple[int, int], None]:
         """Process a single result in the result queue. Returns a tuple with IDs.
