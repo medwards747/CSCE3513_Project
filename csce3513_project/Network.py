@@ -1,3 +1,4 @@
+import logging
 import socket
 import multiprocessing
 import select
@@ -18,7 +19,10 @@ class NetworkSender:
         """
         self._remote_address = remote_address
         self._remote_port = remote_port
+        self._logger = logging.getLogger()
 
+        self._logger.debug(
+            f"Opening a connection to {self._remote_address}:{self._remote_port}")
         # Create a UDP socket at client side
         self._s = socket.socket(
             family=socket.AF_INET, type=socket.SOCK_DGRAM)
@@ -29,6 +33,8 @@ class NetworkSender:
         Arguments:
             data -- Bytes to send.
         """
+        self._logger.debug(
+            f"Sending {data} to {self._remote_address}:{self._remote_port}")
         self._s.sendto(
             data, (self._remote_address, self._remote_port))
 
@@ -65,7 +71,9 @@ class NetworkReceiver:
         self._manager = multiprocessing.Manager()
         self._stop_flag = self._manager.Value("B", 0)
         self._result_queue = self._manager.Queue()
+        self._logger = logging.getLogger()
 
+        # Start the server when object is created
         self._start_rx()
 
     def _rx(self) -> None:
@@ -80,6 +88,8 @@ class NetworkReceiver:
             ready_to_read, _, _ = select.select([self._s], [], [], 0.5)
             if ready_to_read:
                 data, client_address = self._s.recvfrom(1024)
+                self._logger.debug(
+                    f"Network receiver got {data} from {client_address}")
                 self._result_queue.put(data)
 
         self._s.close()
@@ -87,15 +97,24 @@ class NetworkReceiver:
     def _start_rx(self) -> None:
         """Start the receiver in a separate process.
         """
+        self._logger.debug(
+            f"Network receiver starting on {self.listen_address}:{self.listen_port}")
         self._t = multiprocessing.Process(target=self._rx)
 
         self._t.start()
 
+        self._logger.debug(
+            f"Network receiver started on {self.listen_address}:{self.listen_port}")
+
     def stop_rx(self) -> None:
         """Stop the receiver process. Blocks until the receiver is stopped.
         """
+        self._logger.debug(
+            f"Network receiver stopping on {self.listen_address}:{self.listen_port}")
         self._stop_flag.value = 1
         self._t.join()
+        self._logger.debug(
+            f"Network receiver stopped on {self.listen_address}:{self.listen_port}")
 
     def process_result(self, block: bool = False, timeout: Union[float, None] = None) -> Union[tuple[int, int], None]:
         """Process a single result in the result queue. Returns a tuple with IDs.
@@ -119,10 +138,12 @@ class NetworkReceiver:
             except Empty:
                 return None
             except ValueError:
-                print("ERROR: Could not convert incoming data to an integer")
+                self._logger.error(
+                    "Could not convert incoming data to an integer")
                 return None
             except IndexError:
-                print("ERROR: Incoming data is not in the correct format")
+                self._logger.error(
+                    "Incoming data is not in the correct format")
                 return None
 
             return (id_transmit, id_hit)
