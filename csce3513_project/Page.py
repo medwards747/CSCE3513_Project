@@ -59,13 +59,17 @@ class Page():
         player_Name = str(name)
         empty_slot_found = False
         for n in range(0,15):
-            if self.team_dictionary[team_color][n][0] == "Empty ID" and empty_slot_found == False:#and first_Available != 0
+            #check if a slot has been found in the loop, and if there is an empty slot at the n slot of team_dictionary
+            if self.team_dictionary[team_color][n][0] == "Empty ID" and empty_slot_found == False:
+                #if a empty slot is found it saves the integer and flips the boolean
                 first_Available = n
                 empty_slot_found = True
-                print(first_Available)
+        #after the above loop if a slot was found we set the relevant slot equal to provided information in
+        #function call
         if empty_slot_found == True:
             self.team_dictionary[team_color][first_Available][0] = player_ID
             self.team_dictionary[team_color][first_Available][1] = player_Name
+            #after changing the slot info we call the function to read team_dictionary into the label lists for gui display
             self.updateLabelInfo()
         else:
             print("No empty slot found")
@@ -85,7 +89,7 @@ class Page():
         id_found = False
         for k in color_list:
             for n in range(0,15):
-                if self.team_dictionary[k][n] == id:
+                if self.team_dictionary[k][n][0] == id:
                     slot_number = n
                     team_color = k
                     id_found = True
@@ -99,6 +103,9 @@ class Page():
             self.team_dictionary[team_color][14][0] = "Empty ID"
             self.team_dictionary[team_color][14][1] = "Empty Slot"
             self.team_dictionary[team_color][14][2] = 0
+            self.updateLabelInfo()
+        else:
+            print("No ID found in any player slot")
     
     
 
@@ -151,8 +158,6 @@ class Page():
                                                 bg=self.color_list[self.temp_num],
                                                 height = 450,
                                                 width = 125)
-                print(k)
-                print(self.color_list[self.temp_num])
                 self.page[1][k]["Frame"].pack(side=LEFT)
                 self.temp_num += 1
         self.temp_list = ["LeftFrame", "RightFrame"]
@@ -184,7 +189,14 @@ class Page():
                                                                     command = partial(self.updatePlayerInfo,
                                                                                       "Green",
                                                                                       "Some",
-                                                                                      "Thing"))
+                                                                                      "Thing")) #testing command needs replaced with function to call player entry window
+        self.page[1]["MiddleFrame"]["Player Deletion Button"] = Button(self.page[1]["MiddleFrame"]["Frame"],
+                                                                    text = "Remove Player", pady = 1,
+                                                                    padx = 2, bd = 5,
+                                                                    bg = "gray", fg = "black", width = 15,
+                                                                    command = partial(self.deletePlayer,
+                                                                    "Some")) #testing command is hard coded, needs replaced with function that calls player id entry to delete
         self.page[1]["MiddleFrame"]["Player Entry Button"].pack()
+        self.page[1]["MiddleFrame"]["Player Deletion Button"].pack()
 
         self.page[0].mainloop()
