@@ -31,6 +31,7 @@ from functools import *
 from tkinter.simpledialog import askstring
 from tkinter.messagebox import showinfo
 from turtle import color
+from Database_Interface import *
 
 
 class Page():
@@ -121,7 +122,20 @@ class Page():
 
     def playerEntryPopup(self, team):
         self.newID = askstring(team, "Enter ID to add to " + str(team) + " team:")
-        self.updatePlayerInfo(team, self.newID, "Name from DB")
+        #self.updatePlayerInfo(team, self.newID, "Name from DB")
+        DB = Database_Interface()
+        data = DB.searchID(self.newID)
+
+        if data == False:
+            self.playerNamePopup()
+            self.newPlayerDictionary = {"id":self.newID,
+                                        "codename":self.newPlayerName,
+                                        "first_name":"None",
+                                        "last_name":"None"}
+            DB.insertName(self.newPlayerDictionary)
+            self.updatePlayerInfo(team, self.newID, self.newPlayerName)
+        else:
+            self.updatePlayerInfo(team, data[0]["id"], data[0]["codename"])
 
     def playerRemovalPopup(self):
         self.removeID = askstring("Player Removal", "Enter ID to remove from game:")
@@ -129,10 +143,13 @@ class Page():
 
     def playerNamePopup(self):
         self.newPlayerName = askstring("New Player Name Entry", "Enter Player Code Name to match with " + str(self.newID))
+        return(self.newPlayerName)
 
-    def __init__(self) -> None:
+   
+    def createTeamEntryPage(self):
         # root is the tkinter window
         self.root = Tk()
+        
         # page will be a hierarchy of lists - outermost list contain the outermost container
         
         #-------------------------------------------------------------------------------------------------------------
@@ -260,5 +277,8 @@ class Page():
 
         self.page[1]["MiddleFrame"]["Player Deletion Button"].pack()
         self.page[1]["MiddleFrame"]["Clear All Button"].pack()
-
+        
         self.page[0].mainloop()
+
+
+
