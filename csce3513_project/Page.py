@@ -28,6 +28,7 @@ Current hierarchy of page list:
 from tkinter import *
 #functools dependency is for testing
 from functools import *
+from turtle import color
 
 
 class Page():
@@ -107,7 +108,15 @@ class Page():
         else:
             print("No ID found in any player slot")
     
-    
+    def clearAll(self):
+        for n in range(0,15):
+            for k in self.team_dictionary:
+                self.team_dictionary[k].pop(0)
+                self.team_dictionary[k].append(["Empty ID",
+                                                "Empty Slot",
+                                                0])
+        self.updateLabelInfo()
+
 
     def __init__(self) -> None:
         # root is the tkinter window
@@ -178,16 +187,34 @@ class Page():
                                                                 anchor = E,bd = 5,
                                                                 relief = SUNKEN,width = 18)           
                 self.page[1][k]["PlayerNameLabelList"][n].grid(row = n, column = 1)
+        #this loop sets the colors for the label lists
+        for k in self.temp_list:
+            for n in range(0,15):
+                if k == "LeftFrame":
+                    self.page[1][k]["PlayerIDLabelList"][n].config(fg = "lime green")
+                    self.page[1][k]["PlayerNameLabelList"][n].config(fg = "lime green")
+                elif k == "RightFrame":
+                    self.page[1][k]["PlayerIDLabelList"][n].config(fg = "red")
+                    self.page[1][k]["PlayerNameLabelList"][n].config(fg = "red")
         
         #creation of middle Frame
 
-        self.page[1]["MiddleFrame"]["Player Entry Button"] = Button(self.page[1]["MiddleFrame"]["Frame"],
-                                                                    text="Enter New Player", pady = 1,
+        self.page[1]["MiddleFrame"]["Player Entry Button Green"] = Button(self.page[1]["MiddleFrame"]["Frame"],
+                                                                    text="Enter New Green Player", pady = 1,
                                                                     padx = 2, bd = 5,
                                                                     bg = "gray", fg = "black", width = 15,
                                                                     #functools used here for testing
                                                                     command = partial(self.updatePlayerInfo,
                                                                                       "Green",
+                                                                                      "Some",
+                                                                                      "Thing")) #testing command needs replaced with function to call player entry window
+        self.page[1]["MiddleFrame"]["Player Entry Button Red"] = Button(self.page[1]["MiddleFrame"]["Frame"],
+                                                                    text="Enter New Red Player", pady = 1,
+                                                                    padx = 2, bd = 5,
+                                                                    bg = "gray", fg = "black", width = 15,
+                                                                    #functools used here for testing
+                                                                    command = partial(self.updatePlayerInfo,
+                                                                                      "Red",
                                                                                       "Some",
                                                                                       "Thing")) #testing command needs replaced with function to call player entry window
         self.page[1]["MiddleFrame"]["Player Deletion Button"] = Button(self.page[1]["MiddleFrame"]["Frame"],
@@ -196,7 +223,15 @@ class Page():
                                                                     bg = "gray", fg = "black", width = 15,
                                                                     command = partial(self.deletePlayer,
                                                                     "Some")) #testing command is hard coded, needs replaced with function that calls player id entry to delete
-        self.page[1]["MiddleFrame"]["Player Entry Button"].pack()
+        self.page[1]["MiddleFrame"]["Clear All Button"] = Button(self.page[1]["MiddleFrame"]["Frame"],
+                                                                 text = "Clear All Players", pady = 1,
+                                                                    padx = 2, bd = 5,
+                                                                    bg = "gray", fg = "black", width = 15,
+                                                                    command = self.clearAll)
+        self.page[1]["MiddleFrame"]["Player Entry Button Green"].pack()
+        self.page[1]["MiddleFrame"]["Player Entry Button Red"].pack()
+
         self.page[1]["MiddleFrame"]["Player Deletion Button"].pack()
+        self.page[1]["MiddleFrame"]["Clear All Button"].pack()
 
         self.page[0].mainloop()
