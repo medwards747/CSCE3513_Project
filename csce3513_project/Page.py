@@ -127,6 +127,9 @@ class Page():
         self.removeID = askstring("Player Removal", "Enter ID to remove from game:")
         self.deletePlayer(self.removeID)
 
+    def playerNamePopup(self):
+        self.newPlayerName = askstring("New Player Name Entry", "Enter Player Code Name to match with " + str(self.newID))
+
     def __init__(self) -> None:
         # root is the tkinter window
         self.root = Tk()
@@ -155,6 +158,7 @@ class Page():
         #-------------------------------------------------------------------------------------------------------------
         self.page = [0]
         self.page[0] = self.root
+        self.page[0].resizable(width=False, height=False)
         self.page[0].geometry("850x600")
         # as well as the dictionary of all elements within the outermost layer
         self.page_dictionary = {}
@@ -168,16 +172,14 @@ class Page():
         self.temp_list = ["LeftFrame", "MiddleFrame", "RightFrame"]
         # changed from lists to dictionary
         # hierarchy is list -> dictionary -> dictionary -> objects/lists of objects
-        self.color_list = ["green", "black", "red"]
-        self.temp_num = 0
+        self.column_num = 0
         for k in self.temp_list:
 
                 self.page[1][k]["Frame"] = Frame(self.page[0],
-                                                bg=self.color_list[self.temp_num],
                                                 height = 450,
                                                 width = 125)
-                self.page[1][k]["Frame"].pack(side=LEFT)
-                self.temp_num += 1
+                self.page[1][k]["Frame"].grid(row = 1, column = self.column_num)
+                self.column_num += 1
         self.temp_list = ["LeftFrame", "RightFrame"]
 
         for k in self.temp_list:
@@ -206,6 +208,27 @@ class Page():
                     self.page[1][k]["PlayerIDLabelList"][n].config(fg = "red")
                     self.page[1][k]["PlayerNameLabelList"][n].config(fg = "red")
         
+        #creation of top frame
+        self.page[1]["TopLeftFrame"] = {}
+        self.page[1]["TopLeftFrame"]["Frame"] = Frame(self.page[0], bg="white")
+        self.page[1]["TopLeftFrame"]["Frame"].grid(row = 0, column=0)
+        self.page[1]["TopLeftFrame"]["Green Label"] = Label(self.page[1]["TopLeftFrame"]["Frame"],
+                                                        text = "Green Team", fg = "lime green", font = ("Arial", 25),
+                                                        anchor=E, pady=1, padx=2,
+                                                        bd = 5)
+        self.page[1]["TopLeftFrame"]["Green Label"].grid(row = 0, column = 0)
+
+        self.page[1]["TopRightFrame"] = {}
+        self.page[1]["TopRightFrame"]["Frame"] = Frame(self.page[0], bg="white")
+        self.page[1]["TopRightFrame"]["Frame"].grid(row = 0, column=2)
+        self.page[1]["TopRightFrame"]["Red Label"] = Label(self.page[1]["TopRightFrame"]["Frame"],
+                                                    text= "Red Team", fg = "red", font = ("Arial", 25),
+                                                    anchor=E, pady=1, padx=2,
+                                                        bd = 5)
+        self.page[1]["TopRightFrame"]["Red Label"].grid(row = 0, column = 1)
+
+
+
         #creation of middle Frame
 
         self.page[1]["MiddleFrame"]["Player Entry Button Green"] = Button(self.page[1]["MiddleFrame"]["Frame"],
