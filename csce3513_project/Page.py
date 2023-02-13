@@ -28,6 +28,8 @@ Current hierarchy of page list:
 from tkinter import *
 #functools dependency is for testing
 from functools import *
+from tkinter.simpledialog import askstring
+from tkinter.messagebox import showinfo
 from turtle import color
 
 
@@ -117,6 +119,13 @@ class Page():
                                                 0])
         self.updateLabelInfo()
 
+    def playerEntryPopup(self, team):
+        self.newID = askstring(team, "Enter ID to add to " + str(team) + " team:")
+        self.updatePlayerInfo(team, self.newID, "Name from DB")
+
+    def playerRemovalPopup(self):
+        self.removeID = askstring("Player Removal", "Enter ID to remove from game:")
+        self.deletePlayer(self.removeID)
 
     def __init__(self) -> None:
         # root is the tkinter window
@@ -204,25 +213,20 @@ class Page():
                                                                     padx = 2, bd = 5,
                                                                     bg = "gray", fg = "black", width = 15,
                                                                     #functools used here for testing
-                                                                    command = partial(self.updatePlayerInfo,
-                                                                                      "Green",
-                                                                                      "Some",
-                                                                                      "Thing")) #testing command needs replaced with function to call player entry window
+                                                                    command = partial(self.playerEntryPopup,
+                                                                                        "Green")) #testing command needs replaced with function to call player entry window
         self.page[1]["MiddleFrame"]["Player Entry Button Red"] = Button(self.page[1]["MiddleFrame"]["Frame"],
                                                                     text="Enter New Red Player", pady = 1,
                                                                     padx = 2, bd = 5,
                                                                     bg = "gray", fg = "black", width = 15,
                                                                     #functools used here for testing
-                                                                    command = partial(self.updatePlayerInfo,
-                                                                                      "Red",
-                                                                                      "Some",
-                                                                                      "Thing")) #testing command needs replaced with function to call player entry window
+                                                                    command = partial(self.playerEntryPopup,
+                                                                                        "Red")) #testing command needs replaced with function to call player entry window
         self.page[1]["MiddleFrame"]["Player Deletion Button"] = Button(self.page[1]["MiddleFrame"]["Frame"],
                                                                     text = "Remove Player", pady = 1,
                                                                     padx = 2, bd = 5,
                                                                     bg = "gray", fg = "black", width = 15,
-                                                                    command = partial(self.deletePlayer,
-                                                                    "Some")) #testing command is hard coded, needs replaced with function that calls player id entry to delete
+                                                                    command = self.playerRemovalPopup) #testing command is hard coded, needs replaced with function that calls player id entry to delete
         self.page[1]["MiddleFrame"]["Clear All Button"] = Button(self.page[1]["MiddleFrame"]["Frame"],
                                                                  text = "Clear All Players", pady = 1,
                                                                     padx = 2, bd = 5,
