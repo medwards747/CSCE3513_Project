@@ -10,8 +10,8 @@ class Splash:
 
     def __init__(self) -> None:
         # set up blank screen
-        width = 427
-        height = 250
+        width = 1000
+        height = 700
         self.root = Tk()
 
 
@@ -26,7 +26,7 @@ class Splash:
         # remove the heading on top
         self.root.overrideredirect(1)
 
-        Frame(self.root, width=427, height=241, bg='black').place(x=0, y=0)
+        Frame(self.root, width=427, height=241, bg='black').place(x=50, y=100)
 
 
         # add logo
@@ -40,7 +40,7 @@ class Splash:
 
         self.root.after(3000,lambda: self.root.destroy())
         mainloop()
-        run_page()
+
 
 
 
