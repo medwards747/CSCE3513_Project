@@ -1,8 +1,5 @@
 
 from supabase import create_client, Client
-import Page
-
-
 
 
 class Database_Interface:
@@ -19,6 +16,7 @@ class Database_Interface:
     
     #insertName expects a dictionary containing
     #id, codename, last_name, first_name
+    #keys should be strings containing exactly the above
 
     def insertName(self,dict):
         self.supabase.table("player").insert(dict).execute()
