@@ -1,17 +1,182 @@
+'''
+Page.py
+Author: Matthew Edwards
+Dependencies: tkinter
+Description:
+Page.py is a script that uses tkinter architecture to build a player entry page for a laser tag system.
+The list page contains the entire hierarchy of the GUI within a box.
+
+Current hierarchy of page list:
+[] outermost list
+    0 - contains the root tk window
+    1 - contains a dictionary
+[]  {}
+    "LeftFrame" - contains a dictionary
+    "RightFrame" - contains a dictionary
+    "MiddleFrame" - contains a dictionary
+[]  {}  {}
+    the dictionaries at this level contain either the objects themselves or lists of objects within the above container
+[]  {}  {}  []
+    the lists at this level contain labels
+
+
+'''
+
+
+
+
 from tkinter import *
-from csce3513_project.Player_Button import *
+#functools dependency is for testing
+from functools import *
+from tkinter.simpledialog import askstring
+from tkinter.messagebox import showinfo
+from turtle import color
+from Database_Interface import *
 
 
 class Page():
-    # init function, what occurs as soon as Page object is created
+        # init function, what occurs as soon as Page object is created
+     
+    def updateLabelInfo(self):
+        #function will read through the team_dictionary and place all the string data into the relevant slots
+        frame_list = ["LeftFrame", "RightFrame"]
+        for k in frame_list:
+            for n in range(0,15):
+                if k == "LeftFrame":
+                    self.page[1][k]["PlayerIDLabelList"][n].config(text = self.team_dictionary["Green"][n][0])
+                    self.page[1][k]["PlayerNameLabelList"][n].config(text = self.team_dictionary["Green"][n][1])
+                if k == "RightFrame":
+                    self.page[1][k]["PlayerIDLabelList"][n].config(text = self.team_dictionary["Red"][n][0])
+                    self.page[1][k]["PlayerNameLabelList"][n].config(text = self.team_dictionary["Red"][n][1])
 
-    def __init__(self) -> None:
+    def updatePlayerInfo(self, team, id, name):
+        #-------------------------------------------------------------------------------------------------------------
+        #team should be passed in as a string, capitalized color, this will be used to reference which team to place
+        #the player into
+        #function takes in the team to interact with, id of player, name of player
+        #tests the team dictionary for the first empty slot
+        #then places the players information into the slot
+        #-------------------------------------------------------------------------------------------------------------
+        #typecasting of the inputs
+        team_color = str(team)
+        player_ID = str(id)
+        player_Name = str(name)
+        empty_slot_found = False
+        for n in range(0,15):
+            #check if a slot has been found in the loop, and if there is an empty slot at the n slot of team_dictionary
+            if self.team_dictionary[team_color][n][0] == "Empty ID" and empty_slot_found == False:
+                #if a empty slot is found it saves the integer and flips the boolean
+                first_Available = n
+                empty_slot_found = True
+        #after the above loop if a slot was found we set the relevant slot equal to provided information in
+        #function call
+        if empty_slot_found == True:
+            self.team_dictionary[team_color][first_Available][0] = player_ID
+            self.team_dictionary[team_color][first_Available][1] = player_Name
+            #after changing the slot info we call the function to read team_dictionary into the label lists for gui display
+            self.updateLabelInfo()
+        else:
+            print("No empty slot found")
+
+    def deletePlayer(self, id):
+        #-------------------------------------------------------------------------------------------------------------
+        #will delete a player from the game
+        #first looks for matching id in green
+        #if found in green records slot and team color
+        # resets slot to empty then starts a loop that moves all slots below up one and then 
+        #fills lasts slot with default slot info
+        #thn calls for labels to be refreshed
+        #-------------------------------------------------------------------------------------------------------------
+        color_list = ["Green", "Red"]
+        slot_number = 0
+        team_color = ""
+        id_found = False
+        for k in color_list:
+            for n in range(0,15):
+                if self.team_dictionary[k][n][0] == id:
+                    slot_number = n
+                    team_color = k
+                    id_found = True
+        if id_found == True:
+            #removes the slot that is found from the player list
+            #pop method is supposed to remove the selected index from the list
+            self.team_dictionary[team_color].pop(slot_number)
+            #adds a new empty entry at the bottom of the list
+            self.team_dictionary[team_color].append([0] * 3)
+            #initializes the slot info
+            self.team_dictionary[team_color][14][0] = "Empty ID"
+            self.team_dictionary[team_color][14][1] = "Empty Slot"
+            self.team_dictionary[team_color][14][2] = 0
+            self.updateLabelInfo()
+        else:
+            print("No ID found in any player slot")
+    
+    def clearAll(self):
+        for n in range(0,15):
+            for k in self.team_dictionary:
+                self.team_dictionary[k].pop(0)
+                self.team_dictionary[k].append(["Empty ID",
+                                                "Empty Slot",
+                                                0])
+        self.updateLabelInfo()
+
+    def playerEntryPopup(self, team):
+        self.newID = askstring(team, "Enter ID to add to " + str(team) + " team:")
+        #self.updatePlayerInfo(team, self.newID, "Name from DB")
+        DB = Database_Interface()
+        data = DB.searchID(self.newID)
+
+        if data == False:
+            self.playerNamePopup()
+            self.newPlayerDictionary = {"id":self.newID,
+                                        "codename":self.newPlayerName,
+                                        "first_name":"None",
+                                        "last_name":"None"}
+            DB.insertName(self.newPlayerDictionary)
+            self.updatePlayerInfo(team, self.newID, self.newPlayerName)
+        else:
+            self.updatePlayerInfo(team, data[0]["id"], data[0]["codename"])
+
+    def playerRemovalPopup(self):
+        self.removeID = askstring("Player Removal", "Enter ID to remove from game:")
+        self.deletePlayer(self.removeID)
+
+    def playerNamePopup(self):
+        self.newPlayerName = askstring("New Player Name Entry", "Enter Player Code Name to match with " + str(self.newID))
+        return(self.newPlayerName)
+
+   
+    def createTeamEntryPage(self):
         # root is the tkinter window
         self.root = Tk()
+        
         # page will be a hierarchy of lists - outermost list contain the outermost container
+        
+        #-------------------------------------------------------------------------------------------------------------
+        #team_dictionary is what the gui will reference to fill the label lists
+        #team_dictionary ->
+        #team color ->
+        #list of player [id, name, score]
+        #initializing the dictionary laid out above
+        #-------------------------------------------------------------------------------------------------------------
+        self.team_dictionary = {}
+        self.team_dictionary["Green"] = [0] * 15
+        self.team_dictionary["Red"] = [0] * 15
+        for n in range(0,15):
+            self.team_dictionary["Green"][n] = [0] * 3
+            self.team_dictionary["Green"][n][0] = "Empty ID"
+            self.team_dictionary["Green"][n][1] = "Empty Slot"
+            self.team_dictionary["Green"][n][2] = 0
+            self.team_dictionary["Red"][n] = [0] * 3
+            self.team_dictionary["Red"][n][0] = "Empty ID"
+            self.team_dictionary["Red"][n][1] = "Empty Slot"
+            self.team_dictionary["Red"][n][2] = 0
 
+        #-------------------------------------------------------------------------------------------------------------
         self.page = [0]
         self.page[0] = self.root
+        self.page[0].resizable(width=False, height=False)
+        self.page[0].geometry("850x600")
         # as well as the dictionary of all elements within the outermost layer
         self.page_dictionary = {}
         self.page.append(self.page_dictionary)
@@ -24,18 +189,14 @@ class Page():
         self.temp_list = ["LeftFrame", "MiddleFrame", "RightFrame"]
         # changed from lists to dictionary
         # hierarchy is list -> dictionary -> dictionary -> objects/lists of objects
-        self.color_list = ["green", "black", "red"]
-        self.temp_num = 0
+        self.column_num = 0
         for k in self.temp_list:
 
                 self.page[1][k]["Frame"] = Frame(self.page[0],
-                                                bg=self.color_list[self.temp_num],
                                                 height = 450,
                                                 width = 125)
-                print(k)
-                print(self.color_list[self.temp_num])
-                self.page[1][k]["Frame"].pack(side=LEFT)
-                self.temp_num += 1
+                self.page[1][k]["Frame"].grid(row = 1, column = self.column_num)
+                self.column_num += 1
         self.temp_list = ["LeftFrame", "RightFrame"]
 
         for k in self.temp_list:
@@ -43,42 +204,81 @@ class Page():
             self.page[1][k]["PlayerNameLabelList"] = [0] * 15
             for n in range(0,15):
                 self.page[1][k]["PlayerIDLabelList"][n] = Label(self.page[1][k]["Frame"],
-                                                                text="Empty Player ID", padx=2,
+                                                                text="Empty ID", padx=2,
                                                                 pady=1,bg = "gray",
                                                                 anchor=E,bd = 5,
                                                                 relief = SUNKEN,width = 10)
                 self.page[1][k]["PlayerIDLabelList"][n].grid(row = n, column = 0)
                 self.page[1][k]["PlayerNameLabelList"][n] = Label(self.page[1][k]["Frame"],
-                                                                text="Empty Player Name",padx = 2,
+                                                                text="Empty Slot",padx = 2,
                                                                 pady=1,bg = "gray",
                                                                 anchor = E,bd = 5,
                                                                 relief = SUNKEN,width = 18)           
                 self.page[1][k]["PlayerNameLabelList"][n].grid(row = n, column = 1)
+        #this loop sets the colors for the label lists
+        for k in self.temp_list:
+            for n in range(0,15):
+                if k == "LeftFrame":
+                    self.page[1][k]["PlayerIDLabelList"][n].config(fg = "lime green")
+                    self.page[1][k]["PlayerNameLabelList"][n].config(fg = "lime green")
+                elif k == "RightFrame":
+                    self.page[1][k]["PlayerIDLabelList"][n].config(fg = "red")
+                    self.page[1][k]["PlayerNameLabelList"][n].config(fg = "red")
         
+        #creation of top frame
+        self.page[1]["TopLeftFrame"] = {}
+        self.page[1]["TopLeftFrame"]["Frame"] = Frame(self.page[0], bg="white")
+        self.page[1]["TopLeftFrame"]["Frame"].grid(row = 0, column=0)
+        self.page[1]["TopLeftFrame"]["Green Label"] = Label(self.page[1]["TopLeftFrame"]["Frame"],
+                                                        text = "Green Team", fg = "lime green", font = ("Arial", 25),
+                                                        anchor=E, pady=1, padx=2,
+                                                        bd = 5)
+        self.page[1]["TopLeftFrame"]["Green Label"].grid(row = 0, column = 0)
+
+        self.page[1]["TopRightFrame"] = {}
+        self.page[1]["TopRightFrame"]["Frame"] = Frame(self.page[0], bg="white")
+        self.page[1]["TopRightFrame"]["Frame"].grid(row = 0, column=2)
+        self.page[1]["TopRightFrame"]["Red Label"] = Label(self.page[1]["TopRightFrame"]["Frame"],
+                                                    text= "Red Team", fg = "red", font = ("Arial", 25),
+                                                    anchor=E, pady=1, padx=2,
+                                                        bd = 5)
+        self.page[1]["TopRightFrame"]["Red Label"].grid(row = 0, column = 1)
+
+
+
         #creation of middle Frame
 
-        self.page[1]["MiddleFrame"]["Player Entry Button"] = Button(self.page[1]["MiddleFrame"]["Frame"],
-                                                                    text="Enter New Player", pady = 1,
+        self.page[1]["MiddleFrame"]["Player Entry Button Green"] = Button(self.page[1]["MiddleFrame"]["Frame"],
+                                                                    text="Enter New Green Player", pady = 1,
                                                                     padx = 2, bd = 5,
-                                                                    bg = "gray", fg = "black", width = 15)
-        self.page[1]["MiddleFrame"]["Player Entry Button"].pack()
+                                                                    bg = "gray", fg = "black", width = 15,
+                                                                    #functools used here for testing
+                                                                    command = partial(self.playerEntryPopup,
+                                                                                        "Green")) #testing command needs replaced with function to call player entry window
+        self.page[1]["MiddleFrame"]["Player Entry Button Red"] = Button(self.page[1]["MiddleFrame"]["Frame"],
+                                                                    text="Enter New Red Player", pady = 1,
+                                                                    padx = 2, bd = 5,
+                                                                    bg = "gray", fg = "black", width = 15,
+                                                                    #functools used here for testing
+                                                                    command = partial(self.playerEntryPopup,
+                                                                                        "Red")) #testing command needs replaced with function to call player entry window
+        self.page[1]["MiddleFrame"]["Player Deletion Button"] = Button(self.page[1]["MiddleFrame"]["Frame"],
+                                                                    text = "Remove Player", pady = 1,
+                                                                    padx = 2, bd = 5,
+                                                                    bg = "gray", fg = "black", width = 15,
+                                                                    command = self.playerRemovalPopup) #testing command is hard coded, needs replaced with function that calls player id entry to delete
+        self.page[1]["MiddleFrame"]["Clear All Button"] = Button(self.page[1]["MiddleFrame"]["Frame"],
+                                                                 text = "Clear All Players", pady = 1,
+                                                                    padx = 2, bd = 5,
+                                                                    bg = "gray", fg = "black", width = 15,
+                                                                    command = self.clearAll)
+        self.page[1]["MiddleFrame"]["Player Entry Button Green"].pack()
+        self.page[1]["MiddleFrame"]["Player Entry Button Red"].pack()
 
+        self.page[1]["MiddleFrame"]["Player Deletion Button"].pack()
+        self.page[1]["MiddleFrame"]["Clear All Button"].pack()
+        
         self.page[0].mainloop()
 
-# updates the labels to clear them/ or update them
-'''
-    def updateLabels(self):
-        temp_list = ["LeftFrame", "RightFrame"]
-        for k in temp_list:
-            for n in range(0,15):
-                self.page[1][k]["PlayerIDLabelList"][n].config(text = )
-                self.page[1][k]["PlayerNameLabelList"][n].config(text =)
 
-list of functions that are needed
-1. update labels - a function that will update the labels across the window to the correct ids and names
-2. player entry - a function that asks for input of player id
-                    if the player id is not found in the database then ask for a new name and store it in the database and update the lists
-3. update team label list - grabs from the player list to get an updated in order list to transplant to the label widgets
-4. add player green - takes id and name and adds to first empty slot of list of green players
-5. add player red - takes id and name and adds to first empty slot of list of red players
-'''
+
