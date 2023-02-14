@@ -1,0 +1,117 @@
+anyio @ file:///home/conda/feedstock_root/build_artifacts/anyio_1666191106763/work/dist
+attrs==22.1.0
+Automat==22.10.0
+beautifulsoup4 @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_croot-15cbtalq/beautifulsoup4_1650462161715/work
+bleach @ file:///home/conda/feedstock_root/build_artifacts/bleach_1674535352125/work
+Bottleneck @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_07078715-3ab7-4562-8d3d-d56b0eaa0f7dp504n_ny/croots/recipe/bottleneck_1657175566567/work
+brotlipy==0.7.0
+certifi==2022.12.7
+cffi @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_f9af_qffaa/croots/recipe/cffi_1659598650277/work
+charset-normalizer @ file:///tmp/build/80754af9/charset-normalizer_1630003229654/work
+click==8.1.3
+click-log @ file:///home/conda/feedstock_root/build_artifacts/click-log_1661327951104/work
+cloudpickle==2.2.0
+cmarkgfm @ file:///Users/runner/miniforge3/conda-bld/cmarkgfm_1666865592350/work
+colorama @ file:///home/conda/feedstock_root/build_artifacts/colorama_1666700638685/work
+conda==23.1.0
+conda-package-handling @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_croot-4sc96bd_/conda-package-handling_1649105290173/work
+configparser==5.3.0
+constantly==15.1.0
+coverage==6.5.0
+coveralls==3.3.1
+cryptography @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_5871d1ea-0250-4cd7-ac89-4b1e60514f5daqk8t0ow/croots/recipe/cryptography_1652101128666/work
+-e git+https://github.com/medwards747/CSCE3513_Project.git@808c97021ae73823be8dd93464faec12c3bc06fb#egg=CSCE_3513_Project
+cytoolz==0.11.0
+dataclasses==0.6
+deprecation @ file:///home/conda/feedstock_root/build_artifacts/deprecation_1589881437857/work
+docopt==0.6.2
+docutils @ file:///Users/runner/miniforge3/conda-bld/docutils_1666754975688/work
+dotty-dict @ file:///home/conda/feedstock_root/build_artifacts/dotty-dict_1615162687577/work
+exceptiongroup==1.0.1
+future==0.18.2
+genson==1.2.2
+gitdb @ file:///home/conda/feedstock_root/build_artifacts/gitdb_1669279893622/work
+GitPython @ file:///home/conda/feedstock_root/build_artifacts/gitpython_1672338156505/work
+gotrue==0.5.4
+h11 @ file:///home/conda/feedstock_root/build_artifacts/h11_1664132893548/work
+h2 @ file:///home/conda/feedstock_root/build_artifacts/h2_1634280454336/work
+hpack==4.0.0
+httpcore @ file:///home/conda/feedstock_root/build_artifacts/httpcore_1671551055614/work
+httpx @ file:///home/conda/feedstock_root/build_artifacts/httpx_1672850625594/work
+hyperframe @ file:///home/conda/feedstock_root/build_artifacts/hyperframe_1619110129307/work
+hyperlink==21.0.0
+hypothesis==6.56.4
+idna @ file:///tmp/build/80754af9/idna_1637925883363/work
+importlib-metadata @ file:///home/conda/feedstock_root/build_artifacts/importlib-metadata_1672612343532/work
+incremental==22.10.0
+iniconfig==1.1.1
+invoke @ file:///home/conda/feedstock_root/build_artifacts/invoke_1665067768085/work
+jaraco.classes @ file:///home/conda/feedstock_root/build_artifacts/jaraco.classes_1667024629799/work
+Jinja2 @ file:///opt/conda/conda-bld/jinja2_1647436528585/work
+joblib==1.2.0
+jsonschema==4.17.0
+keyring @ file:///Users/runner/miniforge3/conda-bld/keyring_1671728292489/work
+libpysal @ file:///tmp/build/80754af9/libpysal_1625165595815/work
+MarkupSafe @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_12c133f5-0720-4727-9c18-599a3af825723lzwham3/croots/recipe/markupsafe_1654597866058/work
+mock==4.0.3
+more-itertools @ file:///home/conda/feedstock_root/build_artifacts/more-itertools_1666110321141/work
+nltk==3.7
+numexpr @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_08e1f2b1-735c-4635-9755-5afc6d3eb18ew8ilpa0t/croots/recipe/numexpr_1656940301129/work
+numpy @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_9bff6b9b-6adc-40a2-b632-076fce306026zq15ylrw/croots/recipe/numpy_and_numpy_base_1653915521605/work
+packaging @ file:///tmp/build/80754af9/packaging_1637314298585/work
+pandas==1.4.3
+Pillow==9.4.0
+pkginfo @ file:///home/conda/feedstock_root/build_artifacts/pkginfo_1673281726124/work
+pluggy @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_croot-w6jyveby/pluggy_1648109277227/work
+postgrest-py @ file:///home/conda/feedstock_root/build_artifacts/postgrest_1668976031555/work
+pycosat==0.6.3
+pycparser @ file:///tmp/build/80754af9/pycparser_1636541352034/work
+pydantic @ file:///Users/runner/miniforge3/conda-bld/pydantic_1673305525958/work
+Pygments @ file:///home/conda/feedstock_root/build_artifacts/pygments_1672682006896/work
+pyOpenSSL @ file:///opt/conda/conda-bld/pyopenssl_1643788558760/work
+pyparsing @ file:///tmp/build/80754af9/pyparsing_1635766073266/work
+pyrsistent==0.19.2
+PySocks @ file:///Users/ktietz/Code/oss/ci_pkgs/pysocks_1626781349491/work
+pytest==7.2.0
+pytest-cov==4.0.0
+python-dateutil @ file:///tmp/build/80754af9/python-dateutil_1626374649649/work
+python-gitlab @ file:///home/conda/feedstock_root/build_artifacts/python-gitlab_1630119897600/work
+python-semantic-release==7.32.1
+pytz @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_830e8540-4c59-42fe-9515-a6f79c24ff6dh653xa67/croots/recipe/pytz_1654762630628/work
+readme-renderer @ file:///home/conda/feedstock_root/build_artifacts/readme_renderer_1667319054060/work
+realtime==0.0.5
+regex==2022.10.31
+requests @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_b15e28ca-768e-4951-b4c6-8a7476e43183hrjpnkg9/croots/recipe/requests_1657734638595/work
+requests-toolbelt @ file:///home/conda/feedstock_root/build_artifacts/requests-toolbelt_1667050328587/work
+rfc3986 @ file:///home/conda/feedstock_root/build_artifacts/rfc3986_1620442452971/work
+ruamel-yaml-conda @ file:///Users/ktietz/demo/mc3/conda-bld/ruamel_yaml_1629464769899/work
+ruamel.yaml @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_aeh5mqcw49/croot/ruamel.yaml_1666304555976/work
+ruamel.yaml.clib @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_f64xdg2rww/croot/ruamel.yaml.clib_1666302244208/work
+scipy @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_00g7o_6fb8/croots/recipe/scipy_1661390408322/work
+semver @ file:///home/conda/feedstock_root/build_artifacts/semver_1603697772578/work
+setuptools-scm @ file:///home/conda/feedstock_root/build_artifacts/setuptools_scm_1671302710265/work
+simplejson==3.17.6
+six @ file:///tmp/build/80754af9/six_1644875935023/work
+sklearn==0.0.post1
+smmap @ file:///home/conda/feedstock_root/build_artifacts/smmap_1611376390914/work
+sniffio @ file:///home/conda/feedstock_root/build_artifacts/sniffio_1662051266223/work
+sortedcontainers==2.4.0
+soupsieve @ file:///tmp/build/80754af9/soupsieve_1636706018808/work
+storage3==0.3.6
+supabase @ file:///home/conda/feedstock_root/build_artifacts/supabase_1669145709351/work
+supafunc @ file:///home/conda/feedstock_root/build_artifacts/supafunc_1668976203196/work
+tabpy==2.5.0
+textblob==0.17.1
+tomli @ file:///home/conda/feedstock_root/build_artifacts/tomli_1644342247877/work
+tomlkit @ file:///home/conda/feedstock_root/build_artifacts/tomlkit_1666864188602/work
+toolz @ file:///tmp/build/80754af9/toolz_1636545406491/work
+tornado==6.2
+tqdm @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_d8374dd1-2388-4771-b0ef-a205a18076f0p40h0nwh/croots/recipe/tqdm_1650891080348/work
+twine==3.8.0
+Twisted==22.10.0
+typing_extensions @ file:///home/conda/feedstock_root/build_artifacts/typing_extensions_1665144421445/work
+urllib3 @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_47l9zvfg19/croots/recipe/urllib3_1659110473746/work
+webencodings==0.5.1
+websockets @ file:///Users/runner/miniforge3/conda-bld/websockets_1666806333846/work
+zipp @ file:///home/conda/feedstock_root/build_artifacts/zipp_1675982654259/work
+zope.interface==5.5.1
