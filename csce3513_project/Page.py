@@ -26,7 +26,6 @@ Current hierarchy of page list:
 
 
 from tkinter import *
-#functools dependency is for testing
 from functools import *
 from tkinter.simpledialog import askstring
 from tkinter.messagebox import showinfo
@@ -225,38 +224,37 @@ class Page():
                     self.page[1][k]["PlayerIDLabelList"][n].config(fg = "red")
                     self.page[1][k]["PlayerNameLabelList"][n].config(fg = "red")
         
-        #creation of top frame
+        #creation of top left frame
         self.page[1]["TopLeftFrame"] = {}
         self.page[1]["TopLeftFrame"]["Frame"] = Frame(self.page[0], bg="white")
         self.page[1]["TopLeftFrame"]["Frame"].grid(row = 0, column=0)
         self.page[1]["TopLeftFrame"]["Green Label"] = Label(self.page[1]["TopLeftFrame"]["Frame"],
-                                                        text = "Green Team", fg = "lime green", font = ("Arial", 25),
-                                                        anchor=E, pady=1, padx=2,
-                                                        bd = 5)
+                                                            text = "Green Team", fg = "lime green", font = ("Arial", 25),
+                                                            anchor=E, pady=1, padx=2,
+                                                            bd = 5)
         self.page[1]["TopLeftFrame"]["Green Label"].grid(row = 0, column = 0)
-
+        #creation of top right frame
         self.page[1]["TopRightFrame"] = {}
         self.page[1]["TopRightFrame"]["Frame"] = Frame(self.page[0], bg="white")
         self.page[1]["TopRightFrame"]["Frame"].grid(row = 0, column=2)
         self.page[1]["TopRightFrame"]["Red Label"] = Label(self.page[1]["TopRightFrame"]["Frame"],
-                                                    text= "Red Team", fg = "red", font = ("Arial", 25),
-                                                    anchor=E, pady=1, padx=2,
-                                                        bd = 5)
+                                                            text= "Red Team", fg = "red", font = ("Arial", 25),
+                                                            anchor=E, pady=1, padx=2,
+                                                            bd = 5)
         self.page[1]["TopRightFrame"]["Red Label"].grid(row = 0, column = 1)
 
 
 
         #creation of middle Frame
-
         self.page[1]["MiddleFrame"]["Player Entry Button Green"] = Button(self.page[1]["MiddleFrame"]["Frame"],
-                                                                    text="Enter New Green Player", pady = 1,
+                                                                    text="Enter Green Player", pady = 1,
                                                                     padx = 2, bd = 5,
                                                                     bg = "gray", fg = "black", width = 15,
                                                                     #functools used here for testing
                                                                     command = partial(self.playerEntryPopup,
                                                                                         "Green")) #testing command needs replaced with function to call player entry window
         self.page[1]["MiddleFrame"]["Player Entry Button Red"] = Button(self.page[1]["MiddleFrame"]["Frame"],
-                                                                    text="Enter New Red Player", pady = 1,
+                                                                    text="Enter Red Player", pady = 1,
                                                                     padx = 2, bd = 5,
                                                                     bg = "gray", fg = "black", width = 15,
                                                                     #functools used here for testing
