@@ -13,7 +13,6 @@ class Team():
         self.teamname = TEAMNAME
         self.numplayers = NUMPLAYERS
         self.score = SCORE
-        
 
 class Scoreboard():
     def __init__(self):
@@ -25,6 +24,7 @@ class Scoreboard():
         self.players.append(Player(2, "player 2", 20, 1))
         self.players.append(Player(3, "player 3", 40, 1))
         self.players.append(Player(4, "player 4", 10, 1))
+        
         self.players.append(Player(9, "player 9", 20, 1))
         self.players.append(Player(10, "player 10", 20, 1))
         self.players.append(Player(11, "player 11", 100, 1))
@@ -34,6 +34,7 @@ class Scoreboard():
         self.players.append(Player(6, "player 6", 80, 2))
         self.players.append(Player(7, "player 7", 50, 2))
         self.players.append(Player(8, "player 8", 50, 2))
+        
         self.players.append(Player(13, "player 13", 10, 2))
         self.players.append(Player(14, "player 14", 20, 2))
         self.players.append(Player(15, "player 15", 40, 2))
@@ -42,12 +43,11 @@ class Scoreboard():
 #--------------------------------------------------
         self.teams = []
 
-        self.teams.append(Team(1, "Red Team", 0, 0))
-        self.teams.append(Team(2, "Blue Team", 0, 0))
+        self.teams.append(Team(1, "RED TEAM", 0, 0))
+        self.teams.append(Team(2, "BLUE TEAM", 0, 0))
 #--------------------------------------------------
     def build(self):
         for player in self.players:
-           # player.DisplayTeam()
            if(player.team == 1):
                 for team in self.teams:
                     if(team.teamid == 1):
@@ -64,7 +64,7 @@ class Scoreboard():
     def DisplayTeams(self):
         for team in self.teams:
             if(team.teamid == 1):
-                print("RED TEAM: ")
+                print(team.teamname + ":")
                 print("Number of Players: " + str(team.numplayers))
                 print("PLAYERS: ")
                 for player in self.players:
@@ -73,7 +73,7 @@ class Scoreboard():
                 print("Red Team Score: " + str(team.score))
 
             elif(team.teamid == 2):
-                print("BLUE TEAM: ")
+                print(team.teamname + ":")
                 print("Number of Players: " + str(team.numplayers))
                 print("PLAYERS: ")
                 for player in self.players:
@@ -83,7 +83,6 @@ class Scoreboard():
 
 scoreboard = Scoreboard()
 scoreboard.build()
-##print("Test")
 
 
 
