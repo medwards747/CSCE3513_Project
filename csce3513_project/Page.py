@@ -127,14 +127,26 @@ class Page():
 
         if data == False:
             self.playerNamePopup()
-            self.newPlayerDictionary = {"id":self.newID,
+            if self.newPlayerName != None: #removes cancel bug 
+                self.newPlayerDictionary = {"id":self.newID,
                                         "codename":self.newPlayerName,
                                         "first_name":"None",
                                         "last_name":"None"}
-            DB.insertName(self.newPlayerDictionary)
-            self.updatePlayerInfo(team, self.newID, self.newPlayerName)
+                DB.insertName(self.newPlayerDictionary)
+                self.updatePlayerInfo(team, self.newID, self.newPlayerName)
         else:
-            self.updatePlayerInfo(team, data[0]["id"], data[0]["codename"])
+        # doesn't allow repeating id's in scoreboard
+            self.rVariable = data[0]["id"]
+            color_list = ["Green", "Red"]
+            slot_number = 0
+            team_color = ""
+            id_found = False
+            for k in color_list:
+                for n in range(0,15):
+                    if self.team_dictionary[k][n][0] == str(self.rVariable):
+                        id_found = True
+            if id_found != True:
+                self.updatePlayerInfo(team, data[0]["id"], data[0]["codename"])
 
     def playerRemovalPopup(self):
         self.removeID = askstring("Player Removal", "Enter ID to remove from game:")
