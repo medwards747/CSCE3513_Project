@@ -35,7 +35,7 @@ from csce3513_project.Database_Interface import Database_Interface
 
 class Page():
         # init function, what occurs as soon as Page object is created
-     
+
     def updateLabelInfo(self):
         #function will read through the team_dictionary and place all the string data into the relevant slots
         frame_list = ["LeftFrame", "RightFrame"]
@@ -82,7 +82,7 @@ class Page():
         #will delete a player from the game
         #first looks for matching id in green
         #if found in green records slot and team color
-        # resets slot to empty then starts a loop that moves all slots below up one and then 
+        # resets slot to empty then starts a loop that moves all slots below up one and then
         #fills lasts slot with default slot info
         #thn calls for labels to be refreshed
         #-------------------------------------------------------------------------------------------------------------
@@ -109,7 +109,7 @@ class Page():
             self.updateLabelInfo()
         else:
             print("No ID found in any player slot")
-    
+
     def clearAll(self):
         for n in range(0,15):
             for k in self.team_dictionary:
@@ -127,7 +127,7 @@ class Page():
 
         if data == False:
             self.playerNamePopup()
-            if self.newPlayerName != None: #removes cancel bug 
+            if self.newPlayerName != None: #removes cancel bug
                 self.newPlayerDictionary = {"id":self.newID,
                                         "codename":self.newPlayerName,
                                         "first_name":"None",
@@ -156,7 +156,7 @@ class Page():
         self.newPlayerName = askstring("New Player Name Entry", "Enter Player Code Name to match with " + str(self.newID))
         return(self.newPlayerName)
 
-   
+
     def createTeamEntryPage(self):
         # root is the tkinter window
         self.root = Tk()
@@ -169,9 +169,9 @@ class Page():
         x_coordinate = (screen_width / 2) - (width / 2)
         y_coordinate = (screen_height / 2) - (height / 2)
         # self.root.geometry("%dx%d+%d+%d" % (width, height, x_coordinate, y_coordinate))
-        
+
         # page will be a hierarchy of lists - outermost list contain the outermost container
-        
+
         #-------------------------------------------------------------------------------------------------------------
         #team_dictionary is what the gui will reference to fill the label lists
         #team_dictionary ->
@@ -205,7 +205,7 @@ class Page():
         self.page[1]["LeftFrame"] = {}
         self.page[1]["MiddleFrame"] = {}
         self.page[1]["RightFrame"] = {}
-        
+
         self.temp_list = ["LeftFrame", "MiddleFrame", "RightFrame"]
         # changed from lists to dictionary
         # hierarchy is list -> dictionary -> dictionary -> objects/lists of objects
@@ -246,7 +246,7 @@ class Page():
                 elif k == "RightFrame":
                     self.page[1][k]["PlayerIDLabelList"][n].config(fg = "red")
                     self.page[1][k]["PlayerNameLabelList"][n].config(fg = "red")
-        
+
         #creation of top left frame
         self.page[1]["TopLeftFrame"] = {}
         self.page[1]["TopLeftFrame"]["Frame"] = Frame(self.page[0], bg="white")
@@ -298,8 +298,7 @@ class Page():
 
         self.page[1]["MiddleFrame"]["Player Deletion Button"].pack()
         self.page[1]["MiddleFrame"]["Clear All Button"].pack()
-        
+
         self.page[0].mainloop()
 
-
-
+        return self.team_dictionary
