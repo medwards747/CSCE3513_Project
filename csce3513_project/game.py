@@ -1,12 +1,13 @@
 import inspect
+
 class Player():
-    def __init__(self, ID, NAME, SCORE, TEAM):
+    def __init__(self, PLAYERNUM, ID, NAME, SCORE, TEAM):
         self.id = ID
         self.name = NAME
         self.score = SCORE
         self.team = TEAM
-
-    ##def update(self):
+        self.playernum = PLAYERNUM
+        ##def update(self):
 class Team():
     def __init__(self, TEAMID, TEAMNAME, NUMPLAYERS, SCORE):
         self.teamid = TEAMID
@@ -19,33 +20,27 @@ class Scoreboard():
         self.playerCount = 0
 #--------------------------------------------------
         self.players = []
-        ##FIXED RED TEAM PLAYERS
-        self.players.append(Player(1, "player 1", 100, 1))
-        self.players.append(Player(2, "player 2", 20, 1))
-        self.players.append(Player(3, "player 3", 40, 1))
-        self.players.append(Player(4, "player 4", 10, 1))
-        
-        self.players.append(Player(9, "player 9", 20, 1))
-        self.players.append(Player(10, "player 10", 20, 1))
-        self.players.append(Player(11, "player 11", 100, 1))
-        self.players.append(Player(12, "player 12", 50, 1))
-        ##FIXED BLUE TEAM PLAYERS
-        self.players.append(Player(1, "player 5", 10, 2))
-        self.players.append(Player(6, "player 6", 80, 2))
-        self.players.append(Player(7, "player 7", 50, 2))
-        self.players.append(Player(8, "player 8", 50, 2))
-        
-        self.players.append(Player(13, "player 13", 10, 2))
-        self.players.append(Player(14, "player 14", 20, 2))
-        self.players.append(Player(15, "player 15", 40, 2))
-        self.players.append(Player(16, "player 16", 10, 2))
-
+        ##Test cases for adding players from dictionary using addPlayer()
+        self.addPlayer(0, "Goku", 1)
+        self.addPlayer(3, "BigPiccolo", 2)
+        self.addPlayer(3445, "Krillin", 1)
+        self.addPlayer(1151, "Vegeta", 2)
+        self.addPlayer("Empty ID", "peepee", 1)
+        self.addPlayer(6969, "Empty Slot", 2)
 #--------------------------------------------------
         self.teams = []
 
         self.teams.append(Team(1, "RED TEAM", 0, 0))
         self.teams.append(Team(2, "BLUE TEAM", 0, 0))
 #--------------------------------------------------
+
+    def addPlayer(self, ID, NAME, TEAM):
+        if((ID == "Empty ID")or(NAME == "Empty Slot")):
+            pass
+        else:
+            self.playerCount += 1
+            self.players.append(Player(self.playerCount, ID, NAME, 0, TEAM))
+
     def build(self):
         for player in self.players:
            if(player.team == 1):
@@ -58,9 +53,10 @@ class Scoreboard():
                     if(team.teamid == 2):
                         team.score += player.score
                         team.numplayers += 1
-        ##DISPLAY TEAM SCORES AND # PLAYERS
         self.DisplayTeams()
+        print("Total Players: " + str(self.playerCount))
 
+##DISPLAY TEAM SCORES AND # PLAYERS FOR TESTING PURPOSES
     def DisplayTeams(self):
         for team in self.teams:
             if(team.teamid == 1):
@@ -70,7 +66,7 @@ class Scoreboard():
                 for player in self.players:
                     if(player.team == 1):
                         print(player.name)
-                print("Red Team Score: " + str(team.score))
+                print("Green Team Score: " + str(team.score))
 
             elif(team.teamid == 2):
                 print(team.teamname + ":")
@@ -79,7 +75,26 @@ class Scoreboard():
                 for player in self.players:
                     if(player.team == 2):
                         print(player.name)
-                print("Blue Team Score: " + str(team.score))
+                print("Red Team Score: " + str(team.score))
+
+    ##def SortTeamScore(self):
+
+##ReadDictionary() will be used to read player data and add to scoreboard from page.py
+    def ReadDictionary(self, dictionary):
+        for green in dictionary:
+            if(green == "Green"):
+                for n in dictionary[green]:
+                    if(dictionary[green][n][0] == "Empty ID"):
+                        pass
+                    else:
+                        self.addPlayer(dictionary[green][n][0], dictionary[green][n][1], 1)
+        for red in dictionary:
+            if(red == "Red"):
+                for n in dictionary[red]:
+                    if(dictionary[red][n][0] == "Empty ID"):
+                        pass
+                    else:
+                        self.addPlayer(dictionary[red][n][0], dictionary[red][n][1], 2)
 
 scoreboard = Scoreboard()
 scoreboard.build()
