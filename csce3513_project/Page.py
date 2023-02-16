@@ -30,7 +30,7 @@ from functools import *
 from tkinter.simpledialog import askstring
 from tkinter.messagebox import showinfo
 from turtle import color
-from Database_Interface import *
+from csce3513_project.Database_Interface import Database_Interface
 
 
 class Page():
