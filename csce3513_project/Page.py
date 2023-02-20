@@ -124,6 +124,15 @@ class Page():
     def playerEntryPopup(self, team):
         self.newID = askstring(
             team, "Enter ID to add to " + str(team) + " team:")
+
+        # Check if ID is an integer
+        try:
+            self.newID = int(self.newID)
+        except ValueError:
+            # Display a popup message if ID is not an integer
+            showinfo("Error", "ID must be an integer")
+            return
+
         # self.updatePlayerInfo(team, self.newID, "Name from DB")
         DB = Database_Interface()
         data = DB.searchID(self.newID)
