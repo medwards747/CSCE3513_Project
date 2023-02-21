@@ -6,7 +6,7 @@ Python 3 project to receive and send events from laser tag guns via UDP and keep
 
 ### Requirements
 
-- Python 3.9+
+- Python 3.9+ (incompatiable with python 3.11)
   - `pip3`
 - `git`
 - Graphical environment
