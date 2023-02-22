@@ -29,6 +29,7 @@ from tkinter.simpledialog import askstring
 from tkinter.messagebox import showinfo
 from turtle import color
 from csce3513_project.Database_Interface import Database_Interface
+import time
 
 
 class Page():
@@ -111,6 +112,36 @@ class Page():
             self.updateLabelInfo()
         else:
             print("No ID found in any player slot")
+    
+    def startGame(self):
+        '''tests if the lobby is populated with atleast one player on each team,
+            if fail show error message
+            if pass start timer, once timer completes kill page which return team_dictionary'''
+        if self.team_dictionary["Green"][0][0] == "Empty ID" or self.team_dictionary["Red"][0][0] == "Empty ID":
+            showinfo("Error", "Both teams need atleast one player.")
+        else:
+            self.timer()
+    
+    def timer(self):
+        if self.timer_started == FALSE:
+            self.time_remaining = 5
+            self.timer_started = TRUE
+
+            def update():
+                if self.time_remaining > 0:
+                    self.time_remaining -= 1
+                    self.page[1]["TopMiddleFrame"]["Label"].config(text = self.time_remaining)
+                    self.page[1]["TopMiddleFrame"]["Label"].after(1000, update)
+                else:
+                    self.page[0].destroy()
+                
+        
+            self.page[1]["TopMiddleFrame"]["Label"].config(text = self.time_remaining)
+            self.page[1]["TopMiddleFrame"]["Label"].after(1000, update)
+        if self.timer_started == TRUE:
+            pass
+            
+        
 
     def clearAll(self):
         for n in range(0, 15):
@@ -174,6 +205,7 @@ class Page():
         # root is the tkinter window
         self.root = Tk()
         self.root.config(bg = "gray24")
+        self.timer_started = FALSE
 
         # Make window non-resizable
         self.root.resizable(width=False, height=False)
@@ -233,14 +265,14 @@ class Page():
             for n in range(0, 15):
                 self.page[1][k]["PlayerIDLabelList"][n] = Label(self.page[1][k]["Frame"],
                                                                 text="Empty ID", padx=2,
-                                                                pady=1, bg="gray34",
+                                                                pady=1, bg="gray40",
                                                                 anchor=E, bd=5,
                                                                 relief=SUNKEN, width=18, height=2, font = ("Arial", 10))  # width = 10
                 self.page[1][k]["PlayerIDLabelList"][n].grid(
                     row=n, column=0)
                 self.page[1][k]["PlayerNameLabelList"][n] = Label(self.page[1][k]["Frame"],
                                                                   text="Empty Slot", padx=2,
-                                                                  pady=1, bg="gray34",
+                                                                  pady=1, bg="gray40",
                                                                   anchor=E, bd=5,
                                                                   relief=SUNKEN, width=35, height=2, font = ("Arial", 10))  # width = 18
                 self.page[1][k]["PlayerNameLabelList"][n].grid(
@@ -264,8 +296,17 @@ class Page():
         self.page[1]["TopLeftFrame"]["Green Label"] = Label(self.page[1]["TopLeftFrame"]["Frame"],
                                                             text="Green Team", fg="lime green", font=("Arial", 25),
                                                             anchor=E, pady=1, padx=2,
-                                                            bd=5, bg = "gray34", relief=RAISED)
+                                                            bd=5, bg = "gray40", relief=RAISED)
         self.page[1]["TopLeftFrame"]["Green Label"].grid(row=0, column=0)
+        #creation of top middle frame
+        self.page[1]["TopMiddleFrame"] = {}
+        self.page[1]["TopMiddleFrame"]["Frame"] = Frame(self.page[0])
+        self.page[1]["TopMiddleFrame"]["Label"] = Label(self.page[1]["TopMiddleFrame"]["Frame"],
+                                                        text = "", pady = 1, padx = 2,
+                                                        bd = 5, bg="gray40", fg = "CadetBlue1",font=("Arial",25),
+                                                        anchor = CENTER, relief= RAISED, width =6)
+        self.page[1]["TopMiddleFrame"]["Frame"].grid(row=0, column =1)
+        self.page[1]["TopMiddleFrame"]["Label"].grid(row=0, column=0)
         # creation of top right frame
         self.page[1]["TopRightFrame"] = {}
         self.page[1]["TopRightFrame"]["Frame"] = Frame(
@@ -274,10 +315,17 @@ class Page():
         self.page[1]["TopRightFrame"]["Red Label"] = Label(self.page[1]["TopRightFrame"]["Frame"],
                                                            text="Red Team", fg="red", font=("Arial", 25),
                                                            anchor=E, pady=1, padx=2,
-                                                           bd=5, bg = "gray34", relief=RAISED)
+                                                           bd=5, bg = "gray40", relief=RAISED)
         self.page[1]["TopRightFrame"]["Red Label"].grid(row=0, column=1)
 
         # creation of middle Frame
+        self.page[1]["MiddleFrame"]["Game Start Button"] = Button(self.page[1]["MiddleFrame"]["Frame"],
+                                                                    text="Game Start", pady=1,
+                                                                          padx=2, bd=5,
+                                                                          bg="gray", fg="black", width=25, height=2, font=("Arial", 12),
+                                                                          command= self.startGame  # width = 15
+                                                                          # functools used here for testing
+                                                                          )
         self.page[1]["MiddleFrame"]["Player Entry Button Green"] = Button(self.page[1]["MiddleFrame"]["Frame"],
                                                                           text="Enter Green Player", pady=1,
                                                                           padx=2, bd=5,
@@ -302,6 +350,7 @@ class Page():
                                                                  padx=2, bd=5,
                                                                  bg="gray", fg="black", width=25, height=2,  # width = 15
                                                                  command=self.clearAll, font = ("Arial", 12))
+        self.page[1]["MiddleFrame"]["Game Start Button"].pack()
         self.page[1]["MiddleFrame"]["Player Entry Button Green"].pack()
         self.page[1]["MiddleFrame"]["Player Entry Button Red"].pack()
 
