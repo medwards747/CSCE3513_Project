@@ -173,6 +173,7 @@ class Page():
     def createTeamEntryPage(self):
         # root is the tkinter window
         self.root = Tk()
+        self.root.config(bg = "gray24")
 
         # Make window non-resizable
         self.root.resizable(width=False, height=False)
@@ -232,16 +233,16 @@ class Page():
             for n in range(0, 15):
                 self.page[1][k]["PlayerIDLabelList"][n] = Label(self.page[1][k]["Frame"],
                                                                 text="Empty ID", padx=2,
-                                                                pady=1, bg="gray",
+                                                                pady=1, bg="gray34",
                                                                 anchor=E, bd=5,
-                                                                relief=SUNKEN, width=18, height=2)  # width = 10
+                                                                relief=SUNKEN, width=18, height=2, font = ("Arial", 10))  # width = 10
                 self.page[1][k]["PlayerIDLabelList"][n].grid(
                     row=n, column=0)
                 self.page[1][k]["PlayerNameLabelList"][n] = Label(self.page[1][k]["Frame"],
                                                                   text="Empty Slot", padx=2,
-                                                                  pady=1, bg="gray",
+                                                                  pady=1, bg="gray34",
                                                                   anchor=E, bd=5,
-                                                                  relief=SUNKEN, width=35, height=2)  # width = 18
+                                                                  relief=SUNKEN, width=35, height=2, font = ("Arial", 10))  # width = 18
                 self.page[1][k]["PlayerNameLabelList"][n].grid(
                     row=n, column=1)
         # this loop sets the colors for the label lists
@@ -263,7 +264,7 @@ class Page():
         self.page[1]["TopLeftFrame"]["Green Label"] = Label(self.page[1]["TopLeftFrame"]["Frame"],
                                                             text="Green Team", fg="lime green", font=("Arial", 25),
                                                             anchor=E, pady=1, padx=2,
-                                                            bd=5)
+                                                            bd=5, bg = "gray34", relief=RAISED)
         self.page[1]["TopLeftFrame"]["Green Label"].grid(row=0, column=0)
         # creation of top right frame
         self.page[1]["TopRightFrame"] = {}
@@ -273,7 +274,7 @@ class Page():
         self.page[1]["TopRightFrame"]["Red Label"] = Label(self.page[1]["TopRightFrame"]["Frame"],
                                                            text="Red Team", fg="red", font=("Arial", 25),
                                                            anchor=E, pady=1, padx=2,
-                                                           bd=5)
+                                                           bd=5, bg = "gray34", relief=RAISED)
         self.page[1]["TopRightFrame"]["Red Label"].grid(row=0, column=1)
 
         # creation of middle Frame
@@ -283,24 +284,24 @@ class Page():
                                                                           bg="gray", fg="black", width=25, height=2,  # width = 15
                                                                           # functools used here for testing
                                                                           command=partial(self.playerEntryPopup,
-                                                                                          "Green"))  # testing command needs replaced with function to call player entry window
+                                                                                          "Green"), font = ("Arial", 12))  # testing command needs replaced with function to call player entry window
         self.page[1]["MiddleFrame"]["Player Entry Button Red"] = Button(self.page[1]["MiddleFrame"]["Frame"],
                                                                         text="Enter Red Player", pady=1,
                                                                         padx=2, bd=5,
                                                                         bg="gray", fg="black", width=25, height=2,  # width = 15
                                                                         # functools used here for testing
                                                                         command=partial(self.playerEntryPopup,
-                                                                                        "Red"))  # testing command needs replaced with function to call player entry window
+                                                                                        "Red"), font = ("Arial", 12))  # testing command needs replaced with function to call player entry window
         self.page[1]["MiddleFrame"]["Player Deletion Button"] = Button(self.page[1]["MiddleFrame"]["Frame"],
                                                                        text="Remove Player", pady=1,
                                                                        padx=2, bd=5,
                                                                        bg="gray", fg="black", width=25, height=2,  # width = 15
-                                                                       command=self.playerRemovalPopup)  # testing command is hard coded, needs replaced with function that calls player id entry to delete
+                                                                       command=self.playerRemovalPopup, font = ("Arial", 12))  # testing command is hard coded, needs replaced with function that calls player id entry to delete
         self.page[1]["MiddleFrame"]["Clear All Button"] = Button(self.page[1]["MiddleFrame"]["Frame"],
                                                                  text="Clear All Players", pady=1,
                                                                  padx=2, bd=5,
                                                                  bg="gray", fg="black", width=25, height=2,  # width = 15
-                                                                 command=self.clearAll)
+                                                                 command=self.clearAll, font = ("Arial", 12))
         self.page[1]["MiddleFrame"]["Player Entry Button Green"].pack()
         self.page[1]["MiddleFrame"]["Player Entry Button Red"].pack()
 
