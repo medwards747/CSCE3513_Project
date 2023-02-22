@@ -21,8 +21,7 @@ Current hierarchy of page list:
 
 
 '''
-
-
+import tkinter
 from tkinter import *
 from functools import *
 from tkinter.simpledialog import askstring
@@ -31,6 +30,9 @@ from turtle import color
 from csce3513_project.Database_Interface import Database_Interface
 import time
 
+
+def ErrorDuplicatePlayer():
+    tkinter.messagebox.showerror(title = None, message= 'Already a player added')
 
 class Page():
     # init function, what occurs as soon as Page object is created
@@ -152,6 +154,7 @@ class Page():
                                                 0])
         self.updateLabelInfo()
 
+
     def playerEntryPopup(self, team):
         self.newID = askstring(
             team, "Enter ID to add to " + str(team) + " team:")
@@ -190,6 +193,8 @@ class Page():
                         id_found = True
             if id_found != True:
                 self.updatePlayerInfo(team, data[0]["id"], data[0]["codename"])
+            else:
+                ErrorDuplicatePlayer()
 
     def playerRemovalPopup(self):
         self.removeID = askstring(
