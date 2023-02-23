@@ -1,26 +1,3 @@
-'''
-Page.py
-Author: Matthew Edwards
-Dependencies: tkinter
-Description:
-Page.py is a script that uses tkinter architecture to build a player entry page for a laser tag system.
-The list page contains the entire hierarchy of the GUI within a box.
-
-Current hierarchy of page list for reference:
-[] outermost list
-    0 - contains the root tk window
-    1 - contains a dictionary
-[]  {}
-    "LeftFrame" - contains a dictionary
-    "RightFrame" - contains a dictionary
-    "MiddleFrame" - contains a dictionary
-[]  {}  {}
-    the dictionaries at this level contain either the objects themselves or lists of objects within the above container
-[]  {}  {}  []
-    the lists at this level contain labels
-
-
-'''
 import tkinter
 from tkinter import *
 from functools import *
@@ -28,7 +5,6 @@ from tkinter.simpledialog import askstring
 from tkinter.messagebox import showinfo
 from turtle import color
 from csce3513_project.Database_Interface import Database_Interface
-import time
 
 
 def ErrorDuplicatePlayer():
@@ -266,52 +242,50 @@ class Page():
         #changing temp_list for use in loop
         self.temp_list = ["LeftFrame", "RightFrame"]
         #loop create lists in dictionary for labels of each team, total of 60 labels
+        self.player_label_dictionary = {'padx':2,'pady':1,'bg':"gray40",'anchor':E,'bd':5,'relief':SUNKEN,'height':2,'font':("Arial", 10)}
         for k in self.temp_list:
             self.page[1][k]["PlayerIDLabelList"] = [0] * 15
             self.page[1][k]["PlayerNameLabelList"] = [0] * 15
             for n in range(0, 15):
                 self.page[1][k]["PlayerIDLabelList"][n] = Label(self.page[1][k]["Frame"],
-                                                                text="Empty ID", padx=2,
-                                                                pady=1, bg="gray40",
-                                                                anchor=E, bd=5,
-                                                                relief=SUNKEN, width=18, height=2, font = ("Arial", 10))  # width = 10
-                self.page[1][k]["PlayerIDLabelList"][n].grid(
-                    row=n, column=0)
+                                                                text="Empty ID",
+                                                                width=18,
+                                                                **self.player_label_dictionary)  
+                self.page[1][k]["PlayerIDLabelList"][n].grid(row=n, column=0)
                 self.page[1][k]["PlayerNameLabelList"][n] = Label(self.page[1][k]["Frame"],
-                                                                  text="Empty Slot", padx=2,
-                                                                  pady=1, bg="gray40",
-                                                                  anchor=E, bd=5,
-                                                                  relief=SUNKEN, width=35, height=2, font = ("Arial", 10))  # width = 18
-                self.page[1][k]["PlayerNameLabelList"][n].grid(
-                    row=n, column=1)
+                                                                  text="Empty Slot",
+                                                                   width=35,
+                                                                   **self.player_label_dictionary)
+                self.page[1][k]["PlayerNameLabelList"][n].grid(row=n, column=1)
         # this loop sets the colors for the label lists
         for k in self.temp_list:
             for n in range(0, 15):
                 if k == "LeftFrame":
-                    self.page[1][k]["PlayerIDLabelList"][n].config(
-                        fg="lime green")
-                    self.page[1][k]["PlayerNameLabelList"][n].config(
-                        fg="lime green")
+                    self.page[1][k]["PlayerIDLabelList"][n].config(fg="lime green")
+                    self.page[1][k]["PlayerNameLabelList"][n].config(fg="lime green")
                 elif k == "RightFrame":
                     self.page[1][k]["PlayerIDLabelList"][n].config(fg="red")
                     self.page[1][k]["PlayerNameLabelList"][n].config(fg="red")
 
+        self.shared_top_frame_dictionary = {'font':("Arial", 25),'anchor':CENTER,'pady':1,'padx':2,'bd':5,'bg':"gray40",'relief':RAISED}
         # creation of top left frame
         self.page[1]["TopLeftFrame"] = {}
         self.page[1]["TopLeftFrame"]["Frame"] = Frame(self.page[0], bg="white")
         self.page[1]["TopLeftFrame"]["Frame"].grid(row=0, column=0)
         self.page[1]["TopLeftFrame"]["Green Label"] = Label(self.page[1]["TopLeftFrame"]["Frame"],
-                                                            text="Green Team", fg="lime green", font=("Arial", 25),
-                                                            anchor=E, pady=1, padx=2,
-                                                            bd=5, bg = "gray40", relief=RAISED)
+                                                            text="Green Team",
+                                                            fg="lime green",
+                                                            width=12,
+                                                            **self.shared_top_frame_dictionary)
         self.page[1]["TopLeftFrame"]["Green Label"].grid(row=0, column=0)
         #creation of top middle frame
         self.page[1]["TopMiddleFrame"] = {}
         self.page[1]["TopMiddleFrame"]["Frame"] = Frame(self.page[0])
         self.page[1]["TopMiddleFrame"]["Label"] = Label(self.page[1]["TopMiddleFrame"]["Frame"],
-                                                        text = "", pady = 1, padx = 2,
-                                                        bd = 5, bg="gray40", fg = "CadetBlue1",font=("Arial",25),
-                                                        anchor = CENTER, relief= RAISED, width =6)
+                                                        text = "",
+                                                        fg = "CadetBlue1",
+                                                        width =6,
+                                                        **self.shared_top_frame_dictionary)
         self.page[1]["TopMiddleFrame"]["Frame"].grid(row=0, column =1)
         self.page[1]["TopMiddleFrame"]["Label"].grid(row=0, column=0)
         # creation of top right frame
@@ -320,43 +294,31 @@ class Page():
             self.page[0], bg="white")
         self.page[1]["TopRightFrame"]["Frame"].grid(row=0, column=2)
         self.page[1]["TopRightFrame"]["Red Label"] = Label(self.page[1]["TopRightFrame"]["Frame"],
-                                                           text="Red Team", fg="red", font=("Arial", 25),
-                                                           anchor=E, pady=1, padx=2,
-                                                           bd=5, bg = "gray40", relief=RAISED)
+                                                           text="Red Team", fg="red", width=12,
+                                                           **self.shared_top_frame_dictionary)
         self.page[1]["TopRightFrame"]["Red Label"].grid(row=0, column=1)
 
         # creation of middle Frame
+        self.button_options_dictionary = {"pady":1,"padx":2, 'bd':5,'bg':"gray", 'fg':"CadetBlue1", 'width':25, 'height':2,'font' : ("Arial", 12)}
         self.page[1]["MiddleFrame"]["Game Start Button"] = Button(self.page[1]["MiddleFrame"]["Frame"],
-                                                                    text="Game Start", pady=1,
-                                                                          padx=2, bd=5,
-                                                                          bg="gray", fg="CadetBlue1", width=25, height=2, font=("Arial", 12),
-                                                                          command= self.startGame  # width = 15
-                                                                          # functools used here for testing
+                                                                    text="Game Start", 
+                                                                    **self.button_options_dictionary,
+                                                                    command= self.startGame
                                                                           )
         self.page[1]["MiddleFrame"]["Player Entry Button Green"] = Button(self.page[1]["MiddleFrame"]["Frame"],
-                                                                          text="Enter Green Player", pady=1,
-                                                                          padx=2, bd=5,
-                                                                          bg="gray", fg="CadetBlue1", width=25, height=2,  # width = 15
-                                                                          # functools used here for testing
-                                                                          command=partial(self.playerEntryPopup,
-                                                                                          "Green"), font = ("Arial", 12))  # testing command needs replaced with function to call player entry window
+                                                                          text="Enter Green Player", 
+                                                                          **self.button_options_dictionary,
+                                                                          command=partial(self.playerEntryPopup,"Green"))  
         self.page[1]["MiddleFrame"]["Player Entry Button Red"] = Button(self.page[1]["MiddleFrame"]["Frame"],
-                                                                        text="Enter Red Player", pady=1,
-                                                                        padx=2, bd=5,
-                                                                        bg="gray", fg="CadetBlue1", width=25, height=2,  # width = 15
-                                                                        # functools used here for testing
-                                                                        command=partial(self.playerEntryPopup,
-                                                                                        "Red"), font = ("Arial", 12))  # testing command needs replaced with function to call player entry window
+                                                                        text="Enter Red Player",
+                                                                        **self.button_options_dictionary,   
+                                                                        command=partial(self.playerEntryPopup,"Red"))
         self.page[1]["MiddleFrame"]["Player Deletion Button"] = Button(self.page[1]["MiddleFrame"]["Frame"],
-                                                                       text="Remove Player", pady=1,
-                                                                       padx=2, bd=5,
-                                                                       bg="gray", fg="CadetBlue1", width=25, height=2,  # width = 15
-                                                                       command=self.playerRemovalPopup, font = ("Arial", 12))  # testing command is hard coded, needs replaced with function that calls player id entry to delete
+                                                                       text="Remove Player",   
+                                                                       command=self.playerRemovalPopup, **self.button_options_dictionary)
         self.page[1]["MiddleFrame"]["Clear All Button"] = Button(self.page[1]["MiddleFrame"]["Frame"],
-                                                                 text="Clear All Players", pady=1,
-                                                                 padx=2, bd=5,
-                                                                 bg="gray", fg="CadetBlue1", width=25, height=2,  # width = 15
-                                                                 command=self.clearAll, font = ("Arial", 12))
+                                                                 text="Clear All Players", 
+                                                                 command=self.clearAll,**self.button_options_dictionary)
         self.page[1]["MiddleFrame"]["Game Start Button"].pack()
         self.page[1]["MiddleFrame"]["Player Entry Button Green"].pack()
         self.page[1]["MiddleFrame"]["Player Entry Button Red"].pack()
