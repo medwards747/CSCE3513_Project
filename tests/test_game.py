@@ -1,6 +1,5 @@
 import unittest
-from csce3513_project.Page import Page
-from csce3513_project.game import Player, Team, Scoreboard
+from csce3513_project.game import Scoreboard
 
 
 class TestScoreboard(unittest.TestCase):
