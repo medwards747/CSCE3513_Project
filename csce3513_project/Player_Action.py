@@ -13,13 +13,13 @@ class Player_Action():
                                     "anchor":E, "pady":1, "padx":2,
                                     "bd":5, "bg" : "gray34", "width":5}
         self.player_label_settings = {"text":"Empty Slot", "padx":2,
-                                        "pady":1, "bg":"gray34",
-                                        "anchor":W, "bd":0,
-                                         "width":35, "height":1, "font":("Arial", 10)}
+                                        "pady":2, "bg":"gray34",
+                                        "anchor":W, "bd":5,
+                                         "width":35, "height":2, "font":("Arial", 10)}
         self.player_score_settings = {"text":0, "padx":2,
-                                        "pady":1, "bg":"gray34",
-                                        "anchor":E, "bd":0,
-                                         "width":7, "height":1, "font":("Arial", 10)}
+                                        "pady":2, "bg":"gray34",
+                                        "anchor":E, "bd":5,
+                                         "width":7, "height":2, "font":("Arial", 10)}
         self.page_dict = {}
         self.page_dict["Window"] = Tk()
         self.page_dict["Contents"] = {}

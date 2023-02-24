@@ -292,23 +292,17 @@ class Page():
         self.page[1]["TopRightFrame"]["Red Label"].grid(row=0, column=1)
 
         # creation of middle Frame
-
-        self.button_options_dictionary = {"pady":1,"padx":2, 'bd':5,'bg':"gray", 'fg':"CadetBlue1", 'width':25, 'height':2,'font' : ("Arial", 12)}
-        self.page[1]["MiddleFrame"]["Game Start Button"] = Button(self.page[1]["MiddleFrame"]["Frame"],text="Game Start",command= self.startGame,
-                                                                    **self.button_options_dictionary)
-        self.page[1]["MiddleFrame"]["Player Entry Button Green"] = Button(self.page[1]["MiddleFrame"]["Frame"],text="Enter Green Player",command=partial(self.playerEntryPopup,"Green"),
-                                                                          **self.button_options_dictionary)  
-        self.page[1]["MiddleFrame"]["Player Entry Button Red"] = Button(self.page[1]["MiddleFrame"]["Frame"],text="Enter Red Player",command=partial(self.playerEntryPopup,"Red"),
-                                                                        **self.button_options_dictionary)
-        self.page[1]["MiddleFrame"]["Player Deletion Button"] = Button(self.page[1]["MiddleFrame"]["Frame"],text="Remove Player",command=self.playerRemovalPopup,
-                                                                        **self.button_options_dictionary)
-        self.page[1]["MiddleFrame"]["Clear All Button"] = Button(self.page[1]["MiddleFrame"]["Frame"],text="Clear All Players",command=self.clearAll,
-                                                                 **self.button_options_dictionary)
-        self.page[1]["MiddleFrame"]["Game Start Button"].pack()
-        self.page[1]["MiddleFrame"]["Player Entry Button Green"].pack()
-        self.page[1]["MiddleFrame"]["Player Entry Button Red"].pack()
-        self.page[1]["MiddleFrame"]["Player Deletion Button"].pack()
-        self.page[1]["MiddleFrame"]["Clear All Button"].pack()
+        # mfargs is a dictionary of lists containing information about each button to create
+        self.mfargs =   [["Game Start Button",{"text":"Game Start", "command":self.startGame}],
+                        ["Player Entry Button Green",{"text":"Enter Green Player","command":partial(self.playerEntryPopup,"Green")}],
+                        ["Player Entry Button Red",{"text":"Enter Red Player","command":partial(self.playerEntryPopup, "Red")}],
+                        ["Player Deletion Button",{"text":"Remove Player","command":self.playerRemovalPopup}],
+                        ["Clear All Button",{"text":"Clear All Players","command":self.clearAll}]]
+        self.button_options_dictionary = {"pady":1,"padx":2, 'bd':5,'bg':"gray40", 'fg':"CadetBlue1", 'width':25, 'height':2,'font' : ("Arial", 12)}
+        #loops through each entry of mfargs and creates then packs the button
+        for n in range(0,5):
+            self.page[1]["MiddleFrame"][self.mfargs[n][0]]=Button(self.page[1]["MiddleFrame"]["Frame"],**self.mfargs[n][1],**self.button_options_dictionary)
+            self.page[1]["MiddleFrame"][self.mfargs[n][0]].pack()
 
 
         self.page[0].mainloop()
