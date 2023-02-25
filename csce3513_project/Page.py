@@ -11,10 +11,13 @@ def ErrorDuplicatePlayer():
     tkinter.messagebox.showerror(title = None, message= 'Already a player added')
 
 class Page():
-    # init function, what occurs as soon as Page object is created
 
     def updateLabelInfo(self):
-        # function will read through the team_dictionary and place all the string data into the relevant slots
+        '''Reads through team_dictionary reference dict and places all string data into the relevant labels
+
+           Notes:
+                Should be called every time a change to team_dictionary could occur        
+        '''
         frame_list = ["LeftFrame", "RightFrame"]
         for k in frame_list:
             for n in range(0, 15):
@@ -26,88 +29,83 @@ class Page():
                     self.page[1][k]["PlayerNameLabelList"][n].config(text=self.team_dictionary["Red"][n][1])
 
     def updatePlayerInfo(self, team, id, name):
-        # -------------------------------------------------------------------------------------------------------------
-        # team should be passed in as a string, capitalized color, this will be used to reference which team to place
-        # the player into
-        # function takes in the team to interact with, id of player, name of player
-        # tests the team dictionary for the first empty slot
-        # then places the players information into the slot
-        # -------------------------------------------------------------------------------------------------------------
-        # typecasting of the inputs
+        ''' Places passed player id and player codename into the first empty slot of the passed team.
+
+            Args:
+                team (str): Should be either "Green" or "Red" for interface with team_dictionary
+                id   (str): Player ID to add to team dictionary, will be typecasted so can be int.
+                name (str): Player code name to add to team dictionary
+            
+            Notes:
+                The reference table team_dictionary is the backend version of the gui display.
+                Calls updateLabelInfo to read updated label info to the gui
+        '''
         team_color = str(team)
         player_ID = str(id)
         player_Name = str(name)
         empty_slot_found = False
         for n in range(0, 15):
-            # check if a slot has been found in the loop, and if there is an empty slot at the n slot of team_dictionary
             if self.team_dictionary[team_color][n][0] == "Empty ID" and empty_slot_found == False:
-                # if a empty slot is found it saves the integer and flips the boolean
                 first_Available = n
                 empty_slot_found = True
-        # after the above loop if a slot was found we set the relevant slot equal to provided information in
-        # function call
         if empty_slot_found == True:
-            self.team_dictionary[team_color][first_Available][0] = player_ID
-            self.team_dictionary[team_color][first_Available][1] = player_Name
-            # after changing the slot info we call the function to read team_dictionary into the label lists for gui display
+            self.team_dictionary[team_color][first_Available] = [player_ID, player_Name]
             self.updateLabelInfo()
         else:
             print("No empty slot found")
 
     def deletePlayer(self, id):
-        # -------------------------------------------------------------------------------------------------------------
-        # will delete a player from the game
-        # first looks for matching id in green
-        # if found in green records slot and team color
-        # resets slot to empty then starts a loop that moves all slots below up one and then
-        # fills lasts slot with default slot info
-        # thn calls for labels to be refreshed
-        # -------------------------------------------------------------------------------------------------------------
-        color_list = ["Green", "Red"]
+        ''' Deletes a provided id from the team dictionary and updates the gui.
+
+            Args:
+                id(str): The player id to be deleted
+            
+            Raises:
+                No errors but will print a message to console if no matching player id is found
+            
+            Notes:
+                Adds a new empty slot to the end of the list from which a player was deleted then calls
+                updatePlayerInfo
+        '''
         slot_number = 0
         team_color = ""
         id_found = False
-        for k in color_list:
+        for k in self.team_dictionary:
             for n in range(0, 15):
                 if self.team_dictionary[k][n][0] == id:
                     slot_number = n
                     team_color = k
                     id_found = True
         if id_found == True:
-            # removes the slot that is found from the player list
-            # pop method is supposed to remove the selected index from the list
             self.team_dictionary[team_color].pop(slot_number)
-            # adds a new empty entry at the bottom of the list
-            self.team_dictionary[team_color].append([0] * 3)
-            # initializes the slot info
-            self.team_dictionary[team_color][14][0] = "Empty ID"
-            self.team_dictionary[team_color][14][1] = "Empty Slot"
-            self.team_dictionary[team_color][14][2] = 0
+            self.team_dictionary[team_color].append(["Empty ID", "Empty Slot", 0])
             self.updateLabelInfo()
         else:
             print("No ID found in any player slot")
     
     def startGame(self):
-        #----------------------------------------------------------------------------------------------------
-        #tests if the lobby is populated with atleast one player on each team,
-        #if fail show error message
-        #if pass start timer, once timer completes kill page which return team_dictionary
-        #----------------------------------------------------------------------------------------------------
+        '''Tests if each team has atleast one player then calls timer
+
+            Raises:
+                Popup if not a player on each team
+        '''
         if self.team_dictionary["Green"][0][0] == "Empty ID" or self.team_dictionary["Red"][0][0] == "Empty ID":
             showinfo("Error", "Both teams need atleast one player.")
         else:
             self.timer()
     
     def timer(self):
-        #----------------------------------------------------------------------------------------------------
-        #First tests that timer hasnt started then sets the time_remaining for the countdown timer and flips the bool
-        #creates function update that will be used locally to run itself every second to update the timer
-        #once the timer runs out kills the mainloop which will run the return statement
-        #----------------------------------------------------------------------------------------------------
+        '''Begins the countdown timer
+
+           Notes:
+                Flips boolean timer_started to disallow buttons to have any effect once countdown has begun.
+                Once the timer hits zero the mainloop of the tk window is .destroy
+        '''
         if self.timer_started == FALSE:
             self.time_remaining = 5
             self.timer_started = TRUE
             def update():
+                '''Creates countdown effect with recursion'''
                 if self.time_remaining > 0:
                     self.time_remaining -= 1
                     self.page[1]["TopMiddleFrame"]["Label"].config(text = self.time_remaining)
@@ -120,10 +118,11 @@ class Page():
             pass
             
     def clearAll(self):
-        #----------------------------------------------------------------------------------------------------
-        #Clears the team_dictionary then reinitializes all the slots
-        #Runs updateLabelInfo() to read the dictionary to the labels
-        #----------------------------------------------------------------------------------------------------
+        '''Clears all player data from the team_dictionary and fills with empty slots
+           
+           Notes:
+                Calls updateLabelInfo to read the new "empty" dictionary to the gui.
+        '''
         if self.timer_started == FALSE:
             for n in range(0, 15):
                 for k in self.team_dictionary:
@@ -133,29 +132,31 @@ class Page():
 
 
     def playerEntryPopup(self, team):
-        #----------------------------------------------------------------------------------------------------
-        #Tests that coutdown hasnt started
-        #creates popup for player id to be entered
-        #creates Database_Interface Object then send user input to DB through API request
-        #tests if data was not recieved
-        #true case-asks for player name to be entered and sends new api request to store id-name pair in DB
-        #false case-checks that playerid isnt already in game then adds to the game if true
-        #----------------------------------------------------------------------------------------------------
+        '''Creates popup for entry of player id, sends input to database, adds to team_dictionary
+        if a match in the team dictionary isn't found. If all checks pass calls updatePlayerInfo
+
+        Args:
+            team (str): team that the player id will attempt to be added to.
+
+        Raises:
+            ValueError: User input for player ID is not a String
+        
+        Notes:
+            data is the dictionary returned from the SQL query from Database.
+            data will be False if query returned no results.
+        '''
         if self.timer_started == FALSE:
-            self.newID = askstring(
-                team, "Enter ID to add to " + str(team) + " team:")
-        # Check if ID is an integer
+            self.newID = askstring(team, "Enter ID to add to " + str(team) + " team:")
             try:
                 self.newID = int(self.newID)
             except ValueError:
-            # Display a popup message if ID is not an integer
                 showinfo("Error", "ID must be an integer")
                 return
             DB = Database_Interface()
             data = DB.searchID(self.newID)
             if data == False:
                 self.playerNamePopup()
-                if self.newPlayerName != None:  # removes cancel bug
+                if self.newPlayerName != None:
                     self.newPlayerDictionary = {"id": self.newID,
                                             "codename": self.newPlayerName,
                                             "first_name": "None",
@@ -163,13 +164,9 @@ class Page():
                     DB.insertName(self.newPlayerDictionary)
                     self.updatePlayerInfo(team, self.newID, self.newPlayerName)
             else:
-            # doesn't allow repeating id's in scoreboard
                 self.rVariable = data[0]["id"]
-                color_list = ["Green", "Red"]
-                slot_number = 0
-                team_color = ""
                 id_found = False
-                for k in color_list:
+                for k in self.team_dictionary:
                     for n in range(0, 15):
                         if self.team_dictionary[k][n][0] == str(self.rVariable):
                             id_found = True
@@ -179,37 +176,39 @@ class Page():
                     ErrorDuplicatePlayer()
 
     def playerRemovalPopup(self):
-        #----------------------------------------------------------------------------------------------------
-        #test if timer has started, otherwise popup for id to remove from game
-        #----------------------------------------------------------------------------------------------------
+        '''Creates popup for user entry of a player id to remove, calls deleteplayer passing id'''
         if self.timer_started == FALSE:
             self.removeID = askstring(
                 "Player Removal", "Enter ID to remove from game:")
             self.deletePlayer(self.removeID)
 
     def playerNamePopup(self):
-        #----------------------------------------------------------------------------------------------------
-        #popup for entry of new codename returns the entry
-        #----------------------------------------------------------------------------------------------------
+        '''Creates popup for user entry of a player code name
+        
+            Returns:
+                newPlayerName(str): user input intended for addition to database and gui.
+        '''
         self.newPlayerName = askstring(
             "New Player Name Entry", "Enter Player Code Name to match with " + str(self.newID))
         return (self.newPlayerName)
 
     def createTeamEntryPage(self):
+        '''Creates team_dictionary for reference, page, a dictionary containing all tk elements
 
+            Returns:
+                team_dictionary(dict): dictionary containing all participating player ids and codenames
+
+            Notes: 
+                Initializes team_dictionary with all "empty" data
+                As much as possible tk gui args are in dictionaries for easy editing
+        '''
         #initialize team_dictonary which acts as reference table for labels and will export to game.py
         self.team_dictionary = {}
         self.team_dictionary["Green"] = [0] * 15
         self.team_dictionary["Red"] = [0] * 15
         for n in range(0, 15):
-            self.team_dictionary["Green"][n] = [0] * 3
-            self.team_dictionary["Green"][n][0] = "Empty ID"
-            self.team_dictionary["Green"][n][1] = "Empty Slot"
-            self.team_dictionary["Green"][n][2] = 0
-            self.team_dictionary["Red"][n] = [0] * 3
-            self.team_dictionary["Red"][n][0] = "Empty ID"
-            self.team_dictionary["Red"][n][1] = "Empty Slot"
-            self.team_dictionary["Red"][n][2] = 0
+            self.team_dictionary["Green"][n] = ["Empty ID", "Empty Slot", 0]
+            self.team_dictionary["Red"][n]   = ["Empty ID", "Empty Slot", 0]
 
         #building out the window hierarchy
         self.root = Tk()
