@@ -1,5 +1,31 @@
 from tkinter import *
 
+class Flash_Capable_Label(Label):
+
+    def __init__(self, original = "gray34", flash_bg = "white" ,delay = 1000, **kwrds):
+        super().__init__(**kwrds)
+        self.delay = delay #time in ms to flash
+        self.current_flash_state = False #bool to track if should be flashing
+        self.flash_state = False #bool to track current state
+        self.original_bg = original
+        self.flash_bg = flash_bg
+
+    def flash(self):
+        if self.current_flash_state:
+            self.flash_state = not self.flash_state
+            if self.flash_state:
+                self.config(bg=self.flash_bg)
+            else:
+                self.config(bg=self.original_bg)
+            self.after(self.delay, self.flash)
+        else:
+            self.flash_state = False
+            self.config(bg = self.original_bg)
+
+    def flip_state(self):
+        self.current_flash_state = not self.current_flash_state
+        self.flash()
+
 
 class Player_Action():
     
@@ -41,15 +67,18 @@ class Player_Action():
         for k in frame_list:
             self.page_dict["Contents"][k]["Frame"].config(relief=RAISED, bd = 5)
 
-        self.page_dict["Contents"]["GreenFrame"]["TeamNameLabel"] = Label(self.page_dict["Contents"]["GreenFrame"]["Frame"],
-                                                                            text="Green Team ", fg = "lime green", **self.team_label_settings)
-        self.page_dict["Contents"]["RedFrame"]["TeamNameLabel"] = Label(self.page_dict["Contents"]["RedFrame"]["Frame"],
-                                                                            text="Red Team ", fg="red", **self.team_label_settings)
-        self.page_dict["Contents"]["GreenFrame"]["TeamScoreLabel"] = Label(self.page_dict["Contents"]["GreenFrame"]["Frame"],
-                                                                            text="0", fg = "lime green", **self.team_score_settings)
-        self.page_dict["Contents"]["RedFrame"]["TeamScoreLabel"] = Label(self.page_dict["Contents"]["RedFrame"]["Frame"],
-                                                                            text="0", fg = "red", **self.team_score_settings)
-      
+        self.page_dict["Contents"]["GreenFrame"]["TeamNameLabel"] = Flash_Capable_Label(master=self.page_dict["Contents"]["GreenFrame"]["Frame"],
+                                                                            text="Green Team ", fg = "lime green", original="gray34", **self.team_label_settings)
+        self.page_dict["Contents"]["RedFrame"]["TeamNameLabel"] = Flash_Capable_Label(master=self.page_dict["Contents"]["RedFrame"]["Frame"],
+                                                                            text="Red Team ", fg="red", original="gray34",**self.team_label_settings)
+        self.page_dict["Contents"]["GreenFrame"]["TeamScoreLabel"] = Flash_Capable_Label(master=self.page_dict["Contents"]["GreenFrame"]["Frame"],
+                                                                            text="0", fg = "lime green",original="gray34", **self.team_score_settings)
+        self.page_dict["Contents"]["RedFrame"]["TeamScoreLabel"] = Flash_Capable_Label(master=self.page_dict["Contents"]["RedFrame"]["Frame"],
+                                                                            text="0", fg = "red", original="gray34",**self.team_score_settings)
+        self.page_dict["Contents"]["GreenFrame"]["TeamNameLabel"].flip_state()
+        self.page_dict["Contents"]["GreenFrame"]["TeamScoreLabel"].flip_state()
+        self.page_dict["Contents"]["RedFrame"]["TeamNameLabel"].flip_state()
+        self.page_dict["Contents"]["RedFrame"]["TeamScoreLabel"].flip_state()
         
 
         self.page_dict["Contents"]["GreenPlayerFrame"]["CNLabelList"] = [0] * 15
