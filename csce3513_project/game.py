@@ -8,11 +8,11 @@ class Player():
 
 
 class Team():
-    def __init__(self, id, name, num_players, score):
+    def __init__(self, id, name):
         self.id = id
         self.name = name
-        self.num_players = num_players
-        self.score = score
+        self.num_players = 0
+        self.score = 0
 
 
 class Scoreboard():
@@ -22,8 +22,8 @@ class Scoreboard():
         self.players = []
         self.teams = []
 
-        self.teams.append(Team(1, "RED TEAM", 0, 0))
-        self.teams.append(Team(2, "BLUE TEAM", 0, 0))
+        self.teams.append(Team(1, "RED TEAM"))
+        self.teams.append(Team(2, "BLUE TEAM"))
 
         self.read_dictionary(dictionary)
         self.build()
