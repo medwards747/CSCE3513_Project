@@ -52,10 +52,8 @@ class TestScoreboard(unittest.TestCase):
             }
         ]
 
-        # TODO: Make work. Right now it says there's no players.
         for test_dictionary in test_dictionaries:
             scoreboard = Scoreboard(test_dictionary)
-            scoreboard.build()
             scoreboard.DisplayTeams()
 
 
