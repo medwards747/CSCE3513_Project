@@ -1,6 +1,3 @@
-import inspect
-
-
 class Player():
     def __init__(self, PLAYERNUM, ID, NAME, SCORE, TEAM):
         self.id = ID
