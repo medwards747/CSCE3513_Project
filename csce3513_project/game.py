@@ -22,8 +22,8 @@ class Scoreboard():
         self.players = []
         self.teams = []
 
-        self.teams.append(Team(1, "RED TEAM"))
-        self.teams.append(Team(2, "BLUE TEAM"))
+        self.teams.append(Team(1, "GREEN TEAM"))
+        self.teams.append(Team(2, "RED TEAM"))
 
         self.read_dictionary(dictionary)
         self.build()
