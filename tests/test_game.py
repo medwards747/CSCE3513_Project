@@ -54,7 +54,7 @@ class TestScoreboard(unittest.TestCase):
 
         for test_dictionary in test_dictionaries:
             scoreboard = Scoreboard(test_dictionary)
-            scoreboard.DisplayTeams()
+            scoreboard.display_teams()
 
 
 # Run the unit tests

@@ -1,23 +1,23 @@
 class Player():
-    def __init__(self, PLAYERNUM, ID, NAME, SCORE, TEAM):
-        self.id = ID
-        self.name = NAME
-        self.score = SCORE
-        self.team = TEAM
-        self.playernum = PLAYERNUM
+    def __init__(self, player_num, id, name, score, team):
+        self.id = id
+        self.name = name
+        self.score = score
+        self.team = team
+        self.player_num = player_num
 
 
 class Team():
-    def __init__(self, TEAMID, TEAMNAME, NUMPLAYERS, SCORE):
-        self.teamid = TEAMID
-        self.teamname = TEAMNAME
-        self.numplayers = NUMPLAYERS
-        self.score = SCORE
+    def __init__(self, id, name, num_players, score):
+        self.id = id
+        self.name = name
+        self.num_players = num_players
+        self.score = score
 
 
 class Scoreboard():
     def __init__(self, dictionary):
-        self.playerCount = 0
+        self.player_count = 0
 
         self.players = []
         self.teams = []
@@ -25,63 +25,63 @@ class Scoreboard():
         self.teams.append(Team(1, "RED TEAM", 0, 0))
         self.teams.append(Team(2, "BLUE TEAM", 0, 0))
 
-        self.ReadDictionary(dictionary)
+        self.read_dictionary(dictionary)
         self.build()
 
-    def addPlayer(self, ID, NAME, TEAM):
+    def add_player(self, ID, NAME, TEAM):
         if not ((ID == "Empty ID") or (NAME == "Empty Slot")):
-            self.playerCount += 1
-            self.players.append(Player(self.playerCount, ID, NAME, 0, TEAM))
+            self.player_count += 1
+            self.players.append(Player(self.player_count, ID, NAME, 0, TEAM))
 
     def build(self):
         for player in self.players:
             if (player.team == 1):
                 for team in self.teams:
-                    if (team.teamid == 1):
+                    if (team.id == 1):
                         team.score += player.score
-                        team.numplayers += 1
+                        team.num_players += 1
             elif (player.team == 2):
                 for team in self.teams:
-                    if (team.teamid == 2):
+                    if (team.id == 2):
                         team.score += player.score
-                        team.numplayers += 1
+                        team.num_players += 1
 
-    # DISPLAY TEAM SCORES AND # PLAYERS FOR TESTING PURPOSES
-    def DisplayTeams(self):
+    def display_teams(self):
+        # DISPLAY TEAM SCORES AND # PLAYERS FOR TESTING PURPOSES
         for team in self.teams:
-            if (team.teamid == 1):
-                print(team.teamname + ":")
-                print("\tNumber of Players: " + str(team.numplayers))
+            if (team.id == 1):
+                print(team.name + ":")
+                print("\tNumber of Players: " + str(team.num_players))
                 print("\tPLAYERS: ")
                 for player in self.players:
                     if (player.team == 1):
                         print("\t\t" + player.name)
-                print("\t" + team.teamname + " Score: " + str(team.score))
+                print("\t" + team.name + " Score: " + str(team.score))
 
-            elif (team.teamid == 2):
-                print(team.teamname + ":")
-                print("\tNumber of Players: " + str(team.numplayers))
+            elif (team.id == 2):
+                print(team.name + ":")
+                print("\tNumber of Players: " + str(team.num_players))
                 print("\tPLAYERS: ")
                 for player in self.players:
                     if (player.team == 2):
                         print("\t\t" + player.name)
-                print("\t" + team.teamname + " Score: " + str(team.score))
+                print("\t" + team.name + " Score: " + str(team.score))
 
             print()
 
-        print("Total Players: " + str(self.playerCount))
+        print("Total Players: " + str(self.player_count))
 
-    # ReadDictionary() will be used to read player data and add to scoreboard from page.py
-    def ReadDictionary(self, dictionary):
+    def read_dictionary(self, dictionary):
+        # read_dictionary() will be used to read player data and add to scoreboard from page.py
         for green in dictionary:
             if (green == "Green"):
                 for n in range(0, 15):
                     if dictionary[green][n][0] != "Empty ID":
-                        self.addPlayer(
+                        self.add_player(
                             dictionary[green][n][0], dictionary[green][n][1], 1)
         for red in dictionary:
             if (red == "Red"):
                 for n in range(0, 15):
                     if dictionary[red][n][0] != "Empty ID":
-                        self.addPlayer(
+                        self.add_player(
                             dictionary[red][n][0], dictionary[red][n][1], 2)
