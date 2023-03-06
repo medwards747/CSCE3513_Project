@@ -19,23 +19,14 @@ class Scoreboard():
     def __init__(self, dictionary):
         self.playerCount = 0
 
-#--------------------------------------------------
         self.players = []
-        ##Test cases for adding players from dictionary using addPlayer()
-        #self.addPlayer(0, "Goku", 1)
-        #self.addPlayer(3, "BigPiccolo", 2)
-        #self.addPlayer(3445, "Krillin", 1)
-        #self.addPlayer(1151, "Vegeta", 2)
-        self.addPlayer("Empty ID", "peepee", 1)
-        self.addPlayer(6969, "Empty Slot", 2)
-#--------------------------------------------------
         self.teams = []
 
         self.teams.append(Team(1, "RED TEAM", 0, 0))
         self.teams.append(Team(2, "BLUE TEAM", 0, 0))
-#--------------------------------------------------
-        ##self.ReadDictionary(dictionary)
-#--------------------------------------------------
+
+        self.ReadDictionary(dictionary)
+        self.build()
 
     def addPlayer(self, ID, NAME, TEAM):
         if((ID == "Empty ID")or(NAME == "Empty Slot")):
