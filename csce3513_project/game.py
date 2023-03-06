@@ -29,9 +29,7 @@ class Scoreboard():
         self.build()
 
     def addPlayer(self, ID, NAME, TEAM):
-        if ((ID == "Empty ID") or (NAME == "Empty Slot")):
-            pass
-        else:
+        if not ((ID == "Empty ID") or (NAME == "Empty Slot")):
             self.playerCount += 1
             self.players.append(Player(self.playerCount, ID, NAME, 0, TEAM))
 
@@ -48,7 +46,7 @@ class Scoreboard():
                         team.score += player.score
                         team.numplayers += 1
 
-# DISPLAY TEAM SCORES AND # PLAYERS FOR TESTING PURPOSES
+    # DISPLAY TEAM SCORES AND # PLAYERS FOR TESTING PURPOSES
     def DisplayTeams(self):
         for team in self.teams:
             if (team.teamid == 1):
@@ -73,21 +71,17 @@ class Scoreboard():
 
         print("Total Players: " + str(self.playerCount))
 
-# ReadDictionary() will be used to read player data and add to scoreboard from page.py
+    # ReadDictionary() will be used to read player data and add to scoreboard from page.py
     def ReadDictionary(self, dictionary):
         for green in dictionary:
             if (green == "Green"):
                 for n in range(0, 15):
-                    if (dictionary[green][n][0] == "Empty ID"):
-                        pass
-                    else:
+                    if dictionary[green][n][0] != "Empty ID":
                         self.addPlayer(
                             dictionary[green][n][0], dictionary[green][n][1], 1)
         for red in dictionary:
             if (red == "Red"):
                 for n in range(0, 15):
-                    if (dictionary[red][n][0] == "Empty ID"):
-                        pass
-                    else:
+                    if dictionary[red][n][0] != "Empty ID":
                         self.addPlayer(
                             dictionary[red][n][0], dictionary[red][n][1], 2)
