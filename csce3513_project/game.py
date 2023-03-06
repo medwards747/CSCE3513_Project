@@ -26,14 +26,14 @@ class Scoreboard():
         self.teams.append(Team(2, "RED TEAM"))
 
         self.read_dictionary(dictionary)
-        self.build()
+        self._build()
 
     def add_player(self, ID, NAME, TEAM):
         if not ((ID == "Empty ID") or (NAME == "Empty Slot")):
             self.player_count += 1
             self.players.append(Player(self.player_count, ID, NAME, 0, TEAM))
 
-    def build(self):
+    def _build(self):
         for player in self.players:
             if (player.team == 1):
                 for team in self.teams:
