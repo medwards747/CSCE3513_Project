@@ -8,5 +8,4 @@ if __name__ == '__main__':
     gui = Page.Page()
     player_data = gui.createTeamEntryPage()
     scoreboard = game.Scoreboard(player_data)
-    ##Use build for testing ReadDictionary() in game.py
-    scoreboard.build()
+    scoreboard.display_teams()
