@@ -190,28 +190,14 @@ class Page():
 
                 DB.insertName(self.newPlayerDictionary)
                 self.updatePlayerInfo(team, self.newID, self.newPlayerName)
-        else:
+            else:
             # doesn't allow repeating id's in scoreboard
-            self.rVariable = data[0]["id"]
-            color_list = ["Green", "Red"]
-            slot_number = 0
-            team_color = ""
-            id_found = False
-            for k in color_list:
-                for n in range(0, 15):
-                    if self.team_dictionary[k][n][0] == str(self.rVariable):
-                        id_found = True
-            if id_found != True:
-                self.updatePlayerInfo(team, data[0]["id"], data[0]["codename"])
-            else:
-                ErrorDuplicatePlayer()
-
-                    DB.insertName(self.newPlayerDictionary)
-                    self.updatePlayerInfo(team, self.newID, self.newPlayerName)
-            else:
                 self.rVariable = data[0]["id"]
+                color_list = ["Green", "Red"]
+                slot_number = 0
+                team_color = ""
                 id_found = False
-                for k in self.team_dictionary:
+                for k in color_list:
                     for n in range(0, 15):
                         if self.team_dictionary[k][n][0] == str(self.rVariable):
                             id_found = True
@@ -219,6 +205,7 @@ class Page():
                     self.updatePlayerInfo(team, data[0]["id"], data[0]["codename"])
                 else:
                     ErrorDuplicatePlayer()
+
 
 
     def playerRemovalPopup(self):
