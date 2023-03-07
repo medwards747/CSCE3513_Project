@@ -1,3 +1,28 @@
+
+'''
+Page.py
+Author: Matthew Edwards
+Dependencies: tkinter
+Description:
+Page.py is a script that uses tkinter architecture to build a player entry page for a laser tag system.
+The list page contains the entire hierarchy of the GUI within a box.
+
+Current hierarchy of page list:
+[] outermost list
+    0 - contains the root tk window
+    1 - contains a dictionary
+[]  {}
+    "LeftFrame" - contains a dictionary
+    "RightFrame" - contains a dictionary
+    "MiddleFrame" - contains a dictionary
+[]  {}  {}
+    the dictionaries at this level contain either the objects themselves or lists of objects within the above container
+[]  {}  {}  []
+    the lists at this level contain labels
+
+
+'''
+
 import tkinter
 from tkinter import *
 from functools import *
@@ -131,6 +156,7 @@ class Page():
             self.updateLabelInfo()
 
 
+
     def playerEntryPopup(self, team):
         '''Creates popup for entry of player id, sends input to database, adds to team_dictionary
         if a match in the team dictionary isn't found. If all checks pass calls updatePlayerInfo
@@ -161,6 +187,25 @@ class Page():
                                             "codename": self.newPlayerName,
                                             "first_name": "None",
                                             "last_name": "None"}
+
+                DB.insertName(self.newPlayerDictionary)
+                self.updatePlayerInfo(team, self.newID, self.newPlayerName)
+        else:
+            # doesn't allow repeating id's in scoreboard
+            self.rVariable = data[0]["id"]
+            color_list = ["Green", "Red"]
+            slot_number = 0
+            team_color = ""
+            id_found = False
+            for k in color_list:
+                for n in range(0, 15):
+                    if self.team_dictionary[k][n][0] == str(self.rVariable):
+                        id_found = True
+            if id_found != True:
+                self.updatePlayerInfo(team, data[0]["id"], data[0]["codename"])
+            else:
+                ErrorDuplicatePlayer()
+
                     DB.insertName(self.newPlayerDictionary)
                     self.updatePlayerInfo(team, self.newID, self.newPlayerName)
             else:
@@ -174,6 +219,7 @@ class Page():
                     self.updatePlayerInfo(team, data[0]["id"], data[0]["codename"])
                 else:
                     ErrorDuplicatePlayer()
+
 
     def playerRemovalPopup(self):
         '''Creates popup for user entry of a player id to remove, calls deleteplayer passing id'''
