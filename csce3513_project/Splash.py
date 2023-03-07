@@ -30,7 +30,7 @@ class Splash:
         Frame(self.root, width=427, height=241, bg='black').place(x=50, y=100)
 
         # add logo
-        im = Image.open("csce3513_project/images/logo.jpg")
+        im = Image.open("csce3513_project/logo.jpg")
         logo = im.resize((width, height))
         LOGO = ImageTk.PhotoImage(logo)
 
