@@ -26,6 +26,93 @@ class Flash_Capable_Label(Label):
         self.current_flash_state = not self.current_flash_state
         self.flash()
 
+    def stop_flashing(self):
+        self.current_flash_state = False
+        self.config(bg = self.original_bg)
+    
+    def start_flashing(self):
+        self.current_flash_state = True
+        self.flash()
+
+class Timer_Label(Label):
+
+    def __init__(self,timer_start = 361, **kwrds):
+        super().__init__(**kwrds)
+        self.time_remaining = timer_start
+        self.minutes = self.time_remaining // 60
+        print("Start minutes: " + str(self.minutes))
+        self.seconds = self.time_remaining % 60
+        print("Start seconds: " + str(self.seconds))
+        self.config(text=str(self.minutes) + ":" + str(self.seconds))
+
+        def updateGUI():
+            if self.time_remaining > 0:
+                self.time_remaining -= 1
+                self.minutes = self.time_remaining // 60
+                self.seconds = self.time_remaining % 60
+                if self.seconds == 0:
+                    self.config(text=str(self.minutes) + ":" + "00")
+                else:
+                    self.config(text=str(self.minutes) + ":" + str(self.seconds))
+                self.after(1000, updateGUI)
+    
+        updateGUI()
+
+class Hit_Feed(Frame):
+
+    
+
+    def __init__(self, team_dictionary, **kwrds):
+        self.player_name_label_settings = {"text":"Empty Slot", #player labels different anchor depending on side needs changed during creation
+                                  "padx":2,
+                                  "pady":2, "bg":"gray34", "bd":5,
+                                  "width":22, "height":1, "font":("Arial", 10)}
+
+        self.hit_label_settings = {"text":"hit", "padx":2,
+                          "pady":2, "bg":"gray34", "fg":"CadetBlue1",
+                          "anchor":CENTER, "bd":5,
+                          "width":7, "height":1, "font":("Arial", 10)}
+        super().__init__(**kwrds)
+        self.team_dictionary = team_dictionary
+        self.list_of_hits = []
+        self.left_labels = []
+        self.hit_labels = []
+        self.right_labels = []
+
+        for n in range(0,15):
+            self.left_labels.append(Label(master = self, anchor = E, **self.player_name_label_settings))
+            self.hit_labels.append(Label(master = self, **self.hit_label_settings))
+            self.right_labels.append(Label(master = self, anchor=W, ** self.player_name_label_settings))
+            self.left_labels[n].grid(row=n,column=0)
+            self.hit_labels[n].grid(row=n, column=1)
+            self.right_labels[n].grid(row=n, column=2)
+
+    
+    def add_hit(self, hit):
+        self.list_of_hits.append(hit)
+        self.update_hitfeed()
+    
+    def add_hits(self, hits):
+        for n in range(len(hits)):
+            self.list_of_hits.append(hits[n])
+        self.update_hitfeed()
+
+    def update_hitfeed(self):
+        if len(self.list_of_hits) < 15:
+            for n in range(len(self.list_of_hits)):
+                enum = n+1
+                self.left_labels[n].config(text=self.list_of_hits[-enum][0], fg = self.list_of_hits[-enum][1])
+                self.hit_labels[n].config(text = "hit", fg = "CadetBlue1")
+                self.right_labels[n].config(text=self.list_of_hits[-enum][2], fg=self.list_of_hits[-enum][3])
+        else:
+            for n in range(0,15):
+                self.left_labels[n].config(text="")
+
+
+
+        
+
+
 
 class Player_Action():
     
@@ -52,11 +139,24 @@ class Player_Action():
                                       "padx":2,
                                       "pady":2, "bg":"gray34",
                                         "anchor":W, "bd":5,
-                                         "width":35, "height":1, "font":("Arial", 10)}
+                                         "width":28, "height":1, "font":("Arial", 10)}
         self.player_score_settings = {"text":0, "padx":2,
                                         "pady":2, "bg":"gray34",
                                         "anchor":E, "bd":5,
                                          "width":7, "height":1, "font":("Arial", 10)}
+
+        self.timer_label_settings = {"padx" :   2,
+                                     "pady" :   2,
+                                     "bg"   :   "gray34",
+                                     "anchor":CENTER,
+                                     "bd":5,
+                                     "width":5,
+                                     "height":1,
+                                     "font":("Arial", 25),
+                                     "fg":"CadetBlue1",
+                                     "timer_start":361,
+                                     "relief":RAISED
+                                    }
         self.page_dict = {}
         self.page_dict["Window"] = Tk()
         self.page_dict["Contents"] = {}
@@ -67,8 +167,7 @@ class Player_Action():
         frame_list = ["GreenFrame",
                       "RedFrame",
                       "GreenPlayerFrame",
-                      "RedPlayerFrame",
-                      "HitFeedFrame"]
+                      "RedPlayerFrame"]
         for k in frame_list:
             self.page_dict["Contents"][k] = {"Frame":Frame(self.page_dict["Window"])}
 
@@ -117,15 +216,30 @@ class Player_Action():
         
 
         self.page_dict["Contents"]["GreenFrame"]["Frame"].grid(row=0,column=0)
-        self.page_dict["Contents"]["RedFrame"]["Frame"].grid(row=0,column=1)
+        self.page_dict["Contents"]["RedFrame"]["Frame"].grid(row=0,column=2)
         self.page_dict["Contents"]["GreenPlayerFrame"]["Frame"].grid(row=1,column=0)
-        self.page_dict["Contents"]["RedPlayerFrame"]["Frame"].grid(row=1,column=1)
-        self.page_dict["Contents"]["HitFeedFrame"]["Frame"].grid(row=2,column=0,columnspan=2)
+        self.page_dict["Contents"]["RedPlayerFrame"]["Frame"].grid(row=1,column=2)
         temp_list = ["RedFrame", "GreenFrame"]
         for k in temp_list:
             self.page_dict["Contents"][k]["TeamNameLabel"].grid(row = 0, column = 0)
             self.page_dict["Contents"][k]["TeamScoreLabel"].grid(row = 0, column = 1)
+
+        #creation of timer frame
+        self.page_dict["Contents"]["TimerFrame"] = {}
+        self.page_dict["Contents"]["TimerFrame"]["Frame"] = Frame(master = self.page_dict["Window"])
+        self.page_dict["Contents"]["TimerFrame"]["TimerLabel"] = Timer_Label(master = self.page_dict["Contents"]["TimerFrame"]["Frame"],
+                                                                             **self.timer_label_settings)
+        self.page_dict["Contents"]["TimerFrame"]["Frame"].grid(row=0,column=1)
+        self.page_dict["Contents"]["TimerFrame"]["TimerLabel"].grid(row=0,column=0)
+
+        #creation of hitfeed 
+        self.page_dict["Contents"]["HitFeedFrame"] = Hit_Feed(team_dictionary={},master = self.page_dict["Window"], bd=5, relief=RAISED)
+        self.page_dict["Contents"]["HitFeedFrame"].grid(row=1, column=1)
+
+        #mainloop ---------------------------------------------------------------------------------------
+
         self.page_dict["Window"].mainloop()
+
 
 
 class Test_kf():
