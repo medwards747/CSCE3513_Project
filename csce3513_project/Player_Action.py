@@ -21,6 +21,7 @@ class Flash_Capable_Label(Label):
         else:
             self.flash_state = False
             self.config(bg = self.original_bg)
+            self.after(self.delay, self.flash)
 
     def flip_state(self):
         self.current_flash_state = not self.current_flash_state
@@ -32,7 +33,6 @@ class Flash_Capable_Label(Label):
     
     def start_flashing(self):
         self.current_flash_state = True
-        self.flash()
 
 class Timer_Label(Label):
 
@@ -40,9 +40,7 @@ class Timer_Label(Label):
         super().__init__(**kwrds)
         self.time_remaining = timer_start
         self.minutes = self.time_remaining // 60
-        print("Start minutes: " + str(self.minutes))
         self.seconds = self.time_remaining % 60
-        print("Start seconds: " + str(self.seconds))
         self.config(text=str(self.minutes) + ":" + str(self.seconds))
 
         def updateGUI():
@@ -50,8 +48,8 @@ class Timer_Label(Label):
                 self.time_remaining -= 1
                 self.minutes = self.time_remaining // 60
                 self.seconds = self.time_remaining % 60
-                if self.seconds == 0:
-                    self.config(text=str(self.minutes) + ":" + "00")
+                if self.seconds < 10:
+                    self.config(text=str(self.minutes) + ":" + "0" + str(self.seconds))
                 else:
                     self.config(text=str(self.minutes) + ":" + str(self.seconds))
                 self.after(1000, updateGUI)
@@ -65,12 +63,12 @@ class Hit_Feed(Frame):
     def __init__(self, team_dictionary, **kwrds):
         self.player_name_label_settings = {"text":"Empty Slot", #player labels different anchor depending on side needs changed during creation
                                   "padx":2,
-                                  "pady":2, "bg":"gray34", "bd":5,
-                                  "width":22, "height":1, "font":("Arial", 10)}
+                                  "pady":2, "bg":"gray34",
+                                  "width":28, "height":1, "font":("Arial", 10)}
 
         self.hit_label_settings = {"text":"hit", "padx":2,
                           "pady":2, "bg":"gray34", "fg":"CadetBlue1",
-                          "anchor":CENTER, "bd":5,
+                          "anchor":CENTER,
                           "width":7, "height":1, "font":("Arial", 10)}
         super().__init__(**kwrds)
         self.team_dictionary = team_dictionary
@@ -100,10 +98,10 @@ class Hit_Feed(Frame):
     def update_hitfeed(self):
         if len(self.list_of_hits) < 15:
             for n in range(len(self.list_of_hits)):
-                enum = n+1
-                self.left_labels[n].config(text=self.list_of_hits[-enum][0], fg = self.list_of_hits[-enum][1])
+                enum = -(n+1)
+                self.left_labels[n].config(text=self.list_of_hits[enum][0], fg = self.list_of_hits[enum][1])
                 self.hit_labels[n].config(text = "hit", fg = "CadetBlue1")
-                self.right_labels[n].config(text=self.list_of_hits[-enum][2], fg=self.list_of_hits[-enum][3])
+                self.right_labels[n].config(text=self.list_of_hits[enum][2], fg=self.list_of_hits[enum][3])
         else:
             for n in range(0,15):
                 self.left_labels[n].config(text="")
@@ -115,8 +113,43 @@ class Hit_Feed(Frame):
 
 
 class Player_Action():
+
+
+
+    def check_flash(self):
+        '''Grabs currently displayed scores on display then tests which labels should be flashing
+
+        Notes:
+        3 cases: all 4 labels should flash or only one side should flash and the other shouldn't
+        Runs recursively every second which is how often the gui will update.
+        '''
+        outer = ["GreenFrame", "RedFrame"]
+        inner = ["TeamScoreLabel", "TeamNameLabel"]
+        green_score = int(self.page_dict["Contents"]["GreenFrame"]["TeamScoreLabel"].cget("text"))
+        red_score   = int(self.page_dict["Contents"]["RedFrame"]["TeamScoreLabel"].cget("text"))
+
+
+        if green_score == red_score:
+            for k in outer:
+                for l in inner:
+                    self.page_dict["Contents"][k][l].start_flashing()
+        elif green_score > red_score:
+            for k in outer:
+                for l in inner:
+                    if k == "GreenFrame":
+                        self.page_dict["Contents"][k][l].start_flashing()
+                    else:
+                        self.page_dict["Contents"][k][l].stop_flashing()
+        else:
+            for k in outer:
+                for l in inner:
+                    if k == "RedFrame":
+                        self.page_dict["Contents"][k][l].start_flashing()
+                    else:
+                        self.page_dict["Contents"][k][l].stop_flashing()
+        self.page_dict["Window"].after(1000,self.check_flash)
     
-    def __init__(self) -> None:
+    def create_play_action(self):
 
         #dictionary for settings labels will need {master, fg, text} in line
         self.team_label_settings = {"font":("Arial", 25),
@@ -138,11 +171,11 @@ class Player_Action():
         self.player_label_settings = {"text":"Empty Slot",
                                       "padx":2,
                                       "pady":2, "bg":"gray34",
-                                        "anchor":W, "bd":5,
-                                         "width":28, "height":1, "font":("Arial", 10)}
+                                        "anchor":W,
+                                         "width":32, "height":1, "font":("Arial", 10)}
         self.player_score_settings = {"text":0, "padx":2,
                                         "pady":2, "bg":"gray34",
-                                        "anchor":E, "bd":5,
+                                        "anchor":E,
                                          "width":7, "height":1, "font":("Arial", 10)}
 
         self.timer_label_settings = {"padx" :   2,
@@ -185,10 +218,6 @@ class Player_Action():
                                                                             text="0", fg = "lime green",original="gray34", **self.team_score_settings)
         self.page_dict["Contents"]["RedFrame"]["TeamScoreLabel"] = Flash_Capable_Label(master=self.page_dict["Contents"]["RedFrame"]["Frame"],
                                                                             text="0", fg = "red", original="gray34",**self.team_score_settings)
-        self.page_dict["Contents"]["GreenFrame"]["TeamNameLabel"].flip_state()
-        self.page_dict["Contents"]["GreenFrame"]["TeamScoreLabel"].flip_state()
-        self.page_dict["Contents"]["RedFrame"]["TeamNameLabel"].flip_state()
-        self.page_dict["Contents"]["RedFrame"]["TeamScoreLabel"].flip_state()
         
 
         self.page_dict["Contents"]["GreenPlayerFrame"]["CNLabelList"] = [0] * 15
@@ -237,7 +266,12 @@ class Player_Action():
         self.page_dict["Contents"]["HitFeedFrame"].grid(row=1, column=1)
 
         #mainloop ---------------------------------------------------------------------------------------
-
+        outer = ["GreenFrame", "RedFrame"]
+        inner = ["TeamNameLabel", "TeamScoreLabel"]
+        for k in outer:
+            for l in inner:
+                self.page_dict["Contents"][k][l].flash()
+        self.page_dict["Window"].after(1000,self.check_flash)
         self.page_dict["Window"].mainloop()
 
 
