@@ -149,7 +149,7 @@ class Player_Action():
                         self.page_dict["Contents"][k][l].stop_flashing()
         self.page_dict["Window"].after(1000,self.check_flash)
     
-    def __init__(self) -> None:
+    def create_play_action(self):
 
         #dictionary for settings labels will need {master, fg, text} in line
         self.team_label_settings = {"font":("Arial", 25),
