@@ -100,11 +100,11 @@ class Scoreboard():
     def update_score(self, player_id, score):
         for player in self.players:
                     if (player.id == player_id):
+                        num = player.score
                         player.score += score
                         if(player.score < 0):
                             player.score = 0
+                        num = num-player.score
                         for team in self.teams:
                             if (player.team == team.id):
-                                team.score += score
-                                if(team.score < 0):
-                                    team.score = 0
+                                team.score -= num

@@ -101,26 +101,25 @@ class TestScoreboard(unittest.TestCase):
             }
         ]
 
+
         for test_dictionary in test_dictionaries:
             scoreboard = Scoreboard(test_dictionary)
-
+            scoreboard.display_teams()
             for _ in range(5):
                 for user in test_dictionary['Green']:
                     if user[1] != 'Empty Slot':
                         user_id = user[0]
 
                         # Add a random number of points to the user
-                        
                         score_to_add = random.randint(-10, 10)
+                        print("Score Added: " + str(score_to_add))
                         scoreboard.update_score(user_id, score_to_add)
 
                 for user in test_dictionary['Red']:
                     if user[1] != 'Empty Slot':
                         user_id = user[0]
-
-                        # Add a random number of points to the user
-                        
                         score_to_add = random.randint(-10, 10)
+                        print("Score Added: " + str(score_to_add))
                         scoreboard.update_score(user_id, score_to_add)
 
                 # Print the scoreboard every iteration
