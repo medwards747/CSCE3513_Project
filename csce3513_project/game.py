@@ -94,6 +94,10 @@ class Scoreboard():
         for player in self.players:
                     if (player.id == player_id):
                         player.score += score
+                        if(player.score < 0):
+                            player.score = 0
                         for team in self.teams:
                             if (player.team == team.id):
                                 team.score += score
+                                if(team.score < 0):
+                                    team.score = 0
