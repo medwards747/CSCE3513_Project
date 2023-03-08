@@ -110,15 +110,17 @@ class TestScoreboard(unittest.TestCase):
                         user_id = user[0]
 
                         # Add a random number of points to the user
+                        
                         score_to_add = random.randint(-10, 10)
-
                         scoreboard.update_score(user_id, score_to_add)
 
                 for user in test_dictionary['Red']:
                     if user[1] != 'Empty Slot':
                         user_id = user[0]
-                        score_to_add = random.randint(-10, 10)
 
+                        # Add a random number of points to the user
+                        
+                        score_to_add = random.randint(-10, 10)
                         scoreboard.update_score(user_id, score_to_add)
 
                 # Print the scoreboard every iteration
