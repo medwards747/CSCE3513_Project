@@ -1,3 +1,8 @@
+csce3513_project/input_box.py
+csce3513_project/test.py
+csce3513_project/test_timer.py
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

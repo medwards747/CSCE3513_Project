@@ -57,6 +57,7 @@ class Scoreboard():
                     if (player.team == 1):
                         print("\t\t" + "Name: " + player.name +
                               "\t\t" + "Score: " + str(player.score))
+
                 print("\t" + team.name + " Score: " + str(team.score))
 
             elif (team.id == 2):
@@ -67,6 +68,7 @@ class Scoreboard():
                     if (player.team == 2):
                         print("\t\t" + "Name: " + player.name +
                               "\t\t" + "Score: " + str(player.score))
+
                 print("\t" + team.name + " Score: " + str(team.score))
 
             print()
