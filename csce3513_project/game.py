@@ -55,7 +55,9 @@ class Scoreboard():
                 print("\tPLAYERS: ")
                 for player in self.players:
                     if (player.team == 1):
-                        print("\t\t" + player.name)
+                        print("\t\t" + "Name: " + player.name +
+                              "\t\t" + "Score: " + str(player.score))
+
                 print("\t" + team.name + " Score: " + str(team.score))
 
             elif (team.id == 2):
@@ -64,7 +66,9 @@ class Scoreboard():
                 print("\tPLAYERS: ")
                 for player in self.players:
                     if (player.team == 2):
-                        print("\t\t" + player.name)
+                        print("\t\t" + "Name: " + player.name +
+                              "\t\t" + "Score: " + str(player.score))
+
                 print("\t" + team.name + " Score: " + str(team.score))
 
             print()
@@ -85,3 +89,14 @@ class Scoreboard():
                     if dictionary[red][n][0] != "Empty ID":
                         self.add_player(
                             dictionary[red][n][0], dictionary[red][n][1], 2)
+
+    def update_score(self, player_id, score):
+            for player in self.players:
+                if(player.score <= 0):
+                    return
+                elif(player.score > 0):
+                    if (player.id == player_id):
+                        player.score += score
+                        for team in self.teams:
+                            if (player.team == team.id):
+                                team.score += score
