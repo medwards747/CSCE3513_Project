@@ -65,12 +65,12 @@ class Hit_Feed(Frame):
     def __init__(self, team_dictionary, **kwrds):
         self.player_name_label_settings = {"text":"Empty Slot", #player labels different anchor depending on side needs changed during creation
                                   "padx":2,
-                                  "pady":2, "bg":"gray34", "bd":5,
-                                  "width":22, "height":1, "font":("Arial", 10)}
+                                  "pady":2, "bg":"gray34",
+                                  "width":28, "height":1, "font":("Arial", 10)}
 
         self.hit_label_settings = {"text":"hit", "padx":2,
                           "pady":2, "bg":"gray34", "fg":"CadetBlue1",
-                          "anchor":CENTER, "bd":5,
+                          "anchor":CENTER,
                           "width":7, "height":1, "font":("Arial", 10)}
         super().__init__(**kwrds)
         self.team_dictionary = team_dictionary
@@ -138,11 +138,11 @@ class Player_Action():
         self.player_label_settings = {"text":"Empty Slot",
                                       "padx":2,
                                       "pady":2, "bg":"gray34",
-                                        "anchor":W, "bd":5,
-                                         "width":28, "height":1, "font":("Arial", 10)}
+                                        "anchor":W,
+                                         "width":32, "height":1, "font":("Arial", 10)}
         self.player_score_settings = {"text":0, "padx":2,
                                         "pady":2, "bg":"gray34",
-                                        "anchor":E, "bd":5,
+                                        "anchor":E,
                                          "width":7, "height":1, "font":("Arial", 10)}
 
         self.timer_label_settings = {"padx" :   2,
