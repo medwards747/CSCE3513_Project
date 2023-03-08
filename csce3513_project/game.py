@@ -91,10 +91,7 @@ class Scoreboard():
                             dictionary[red][n][0], dictionary[red][n][1], 2)
 
     def update_score(self, player_id, score):
-            for player in self.players:
-                if(player.score <= 0):
-                    return
-                elif(player.score > 0):
+        for player in self.players:
                     if (player.id == player_id):
                         player.score += score
                         for team in self.teams:
