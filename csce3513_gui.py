@@ -8,5 +8,5 @@ if __name__ == '__main__':
     gui = Page.Page()
     player_data = gui.createTeamEntryPage()
     scoreboard = game.Scoreboard(player_data)
-    gui = Player_Action.Player_Action()
+    gui = Player_Action.Player_Action(scoreboard = scoreboard)
     gui.create_play_action()

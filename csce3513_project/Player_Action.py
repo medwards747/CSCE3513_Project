@@ -114,6 +114,33 @@ class Hit_Feed(Frame):
 
 class Player_Action():
 
+    def __init__(self, scoreboard) -> None:
+
+        self.scoreboard = scoreboard
+
+    
+    def read_scoreboard(self):
+        player_list = self.scoreboard.export_scoreboard()
+        green_list = []
+        red_list = []
+
+        for n in range(0,len(player_list)):
+            if player_list[n][2] == 1:
+                green_list.append(player_list[n])
+            elif player_list[n][2] == 2:
+                red_list.append(player_list[n])
+
+        self.read_player_data(green_list, "GreenPlayerFrame")
+        self.read_player_data(red_list, "RedPlayerFrame")
+
+
+    def read_player_data(self, team_list, frame):
+        for n in range(0,len(team_list)):
+            self.page_dict["Contents"][frame]["CNLabelList"][n].config(text = team_list[n][0])
+            self.page_dict["Contents"][frame]["ScoreLabelList"][n].config(text = team_list[n][1])
+
+
+
 
 
     def check_flash(self):
@@ -172,11 +199,11 @@ class Player_Action():
                                       "padx":2,
                                       "pady":2, "bg":"gray34",
                                         "anchor":W,
-                                         "width":32, "height":1, "font":("Arial", 10)}
+                                         "width":32, "height":1, "font":("Arial", 12)}
         self.player_score_settings = {"text":0, "padx":2,
                                         "pady":2, "bg":"gray34",
                                         "anchor":E,
-                                         "width":7, "height":1, "font":("Arial", 10)}
+                                         "width":7, "height":1, "font":("Arial", 12)}
 
         self.timer_label_settings = {"padx" :   2,
                                      "pady" :   2,
@@ -272,6 +299,8 @@ class Player_Action():
             for l in inner:
                 self.page_dict["Contents"][k][l].flash()
         self.page_dict["Window"].after(1000,self.check_flash)
+        self.read_scoreboard()
+        self.page_dict["Window"].after(1000,self.read_scoreboard)
         self.page_dict["Window"].mainloop()
 
 
@@ -299,4 +328,3 @@ class Test_kf():
         label_right.grid(row=0,column=2)
 
         tk.mainloop()
-Player_Action()
