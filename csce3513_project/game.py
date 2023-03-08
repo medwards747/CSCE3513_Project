@@ -27,18 +27,11 @@ class Scoreboard():
 
         self.read_dictionary(dictionary)
         self._build()
-        self.export_scoreboard()
 
     def add_player(self, ID, NAME, TEAM):
         if not ((ID == "Empty ID") or (NAME == "Empty Slot")):
             self.player_count += 1
             self.players.append(Player(self.player_count, ID, NAME, 0, TEAM))
-
-    def export_scoreboard(self):
-        player_list = []
-        for m in range(0,self.teams[0].num_players + self.teams[1].num_players):
-            player_list.append([self.players[m].name, self.players[m].score, self.players[m].team])
-        return player_list
 
     def _build(self):
         for player in self.players:
