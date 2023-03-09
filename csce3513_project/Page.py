@@ -30,7 +30,7 @@ from tkinter.simpledialog import askstring
 from tkinter.messagebox import showinfo
 from turtle import color
 from csce3513_project.Database_Interface import Database_Interface
-
+from csce3513_project.Music import musicPlay
 
 def ErrorDuplicatePlayer():
     tkinter.messagebox.showerror(title = None, message= 'Already a player added')
@@ -107,6 +107,7 @@ class Page():
             self.updateLabelInfo()
         else:
             print("No ID found in any player slot")
+
     
     def startGame(self):
         '''Tests if each team has atleast one player then calls timer
@@ -114,6 +115,7 @@ class Page():
             Raises:
                 Popup if not a player on each team
         '''
+
         if self.team_dictionary["Green"][0][0] == "Empty ID" or self.team_dictionary["Red"][0][0] == "Empty ID":
             showinfo("Error", "Both teams need atleast one player.")
         else:
@@ -141,6 +143,10 @@ class Page():
             self.page[1]["TopMiddleFrame"]["Label"].after(1000, update)
         if self.timer_started == TRUE:
             pass
+
+    def registerF5(self, event):
+        print("f5 key pressed")
+        return self.startGame()
             
     def clearAll(self):
         '''Clears all player data from the team_dictionary and fills with empty slots
@@ -224,6 +230,14 @@ class Page():
         self.newPlayerName = askstring(
             "New Player Name Entry", "Enter Player Code Name to match with " + str(self.newID))
         return (self.newPlayerName)
+
+    def runMusicWin(self):
+        ''' If music selection button is pressed Music Selection Window will run
+            This does not work correctly yet btw. Still need to figure out how to overide using .pack and .grid.'''
+
+        runMusic = musicPlay()
+        runMusic.clicked()
+        return runMusic
 
     def createTeamEntryPage(self):
         '''Creates team_dictionary for reference, page, a dictionary containing all tk elements
@@ -329,13 +343,16 @@ class Page():
                         ["Player Entry Button Green",{"text":"Enter Green Player","command":partial(self.playerEntryPopup,"Green")}],
                         ["Player Entry Button Red",{"text":"Enter Red Player","command":partial(self.playerEntryPopup, "Red")}],
                         ["Player Deletion Button",{"text":"Remove Player","command":self.playerRemovalPopup}],
-                        ["Clear All Button",{"text":"Clear All Players","command":self.clearAll}]]
+                        ["Clear All Button",{"text":"Clear All Players","command":self.clearAll}],
+                        ["Music Selection Button",{"text":"Change Music","command": self.runMusicWin}]]
         self.button_options_dictionary = {"pady":1,"padx":2, 'bd':5,'bg':"gray40", 'fg':"CadetBlue1", 'width':25, 'height':2,'font' : ("Arial", 12)}
         #loops through each entry of mfargs and creates then packs the button
-        for n in range(0,5):
+        for n in range(0,6):
             self.page[1]["MiddleFrame"][self.mfargs[n][0]]=Button(self.page[1]["MiddleFrame"]["Frame"],**self.mfargs[n][1],**self.button_options_dictionary)
             self.page[1]["MiddleFrame"][self.mfargs[n][0]].pack()
 
+        # if f5 key is registered, then game starts
+        self.page[0].bind("<F5>", self.registerF5)
 
         self.page[0].mainloop()
         return self.team_dictionary
