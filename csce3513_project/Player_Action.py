@@ -61,12 +61,12 @@ class Hit_Feed(Frame):
     
 
     def __init__(self, team_dictionary, **kwrds):
-        self.player_name_label_settings = {"text":"Empty Slot", #player labels different anchor depending on side needs changed during creation
+        self.player_name_label_settings = {#player labels different anchor depending on side needs changed during creation
                                   "padx":2,
                                   "pady":2, "bg":"gray34",
                                   "width":28, "height":1, "font":("Arial", 10)}
 
-        self.hit_label_settings = {"text":"hit", "padx":2,
+        self.hit_label_settings = {"padx":2,
                           "pady":2, "bg":"gray34", "fg":"CadetBlue1",
                           "anchor":CENTER,
                           "width":7, "height":1, "font":("Arial", 10)}
@@ -104,7 +104,10 @@ class Hit_Feed(Frame):
                 self.right_labels[n].config(text=self.list_of_hits[enum][2], fg=self.list_of_hits[enum][3])
         else:
             for n in range(0,15):
-                self.left_labels[n].config(text="")
+                enum = -(n+1)
+                self.left_labels[n].config(text=self.list_of_hits[enum][0], fg = self.list_of_hits[enum][1])
+                self.hit_labels[n].config(text = "hit", fg = "CadetBlue1")
+                self.right_labels[n].config(text=self.list_of_hits[enum][2], fg=self.list_of_hits[enum][3])
 
 
 
@@ -195,12 +198,12 @@ class Player_Action():
                                     "bg" : "gray34",
                                     "width":5}
 
-        self.player_label_settings = {"text":"Empty Slot",
+        self.player_label_settings = {
                                       "padx":2,
                                       "pady":2, "bg":"gray34",
                                         "anchor":W,
                                          "width":32, "height":1, "font":("Arial", 12)}
-        self.player_score_settings = {"text":0, "padx":2,
+        self.player_score_settings = {"padx":2,
                                         "pady":2, "bg":"gray34",
                                         "anchor":E,
                                          "width":7, "height":1, "font":("Arial", 12)}
@@ -298,9 +301,9 @@ class Player_Action():
         for k in outer:
             for l in inner:
                 self.page_dict["Contents"][k][l].flash()
-        self.page_dict["Window"].after(1000,self.check_flash)
+        self.page_dict["Window"].after(1,self.check_flash)
         self.read_scoreboard()
-        self.page_dict["Window"].after(1000,self.read_scoreboard)
+        self.page_dict["Window"].after(1,self.read_scoreboard)
         self.page_dict["Window"].mainloop()
 
 
