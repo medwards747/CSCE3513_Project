@@ -1,4 +1,5 @@
 from tkinter import *
+import random
 
 class Flash_Capable_Label(Label):
 
@@ -57,6 +58,9 @@ class Timer_Label(Label):
         updateGUI()
 
 class Hit_Feed(Frame):
+    '''Frame that holds 45 labels split into three sections, each to hold a string and be supplied a color
+    
+    '''
 
     
 
@@ -120,6 +124,12 @@ class Player_Action():
     def __init__(self, scoreboard) -> None:
 
         self.scoreboard = scoreboard
+
+    def test_hit(self, event):
+        test_list =[["1","limegreen","2", "red"],["Opus","limegreen","Matt", "red"],["Matt", "red","Opus","limegreen"]]
+        rand = random.randint(0,2)
+
+        self.page_dict["Contents"]["HitFeedFrame"].add_hit(test_list[rand])
 
     
     def read_scoreboard(self):
@@ -296,6 +306,8 @@ class Player_Action():
         self.page_dict["Contents"]["HitFeedFrame"].grid(row=1, column=1)
 
         #mainloop ---------------------------------------------------------------------------------------
+
+        self.page_dict["Window"].bind("<Key>", self.test_hit)
         outer = ["GreenFrame", "RedFrame"]
         inner = ["TeamNameLabel", "TeamScoreLabel"]
         for k in outer:
@@ -303,6 +315,7 @@ class Player_Action():
                 self.page_dict["Contents"][k][l].flash()
         self.page_dict["Window"].after(1,self.check_flash)
         self.read_scoreboard()
+        self.page_dict["Contents"]["HitFeedFrame"].add_hits([["Opus","limegreen","Matt","red"]])
         self.page_dict["Window"].after(1,self.read_scoreboard)
         self.page_dict["Window"].mainloop()
 
