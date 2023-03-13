@@ -1,10 +1,14 @@
 class Player():
-    def __init__(self, player_num, id, name, score, team):
+    def __init__(self, player_num, id, name, team, score = 0):
         self.id = id
         self.name = name
         self.score = score
         self.team = team
         self.player_num = player_num
+    
+    def change_score(self, score):
+        self.score += score
+
 
 
 class Team():
@@ -24,7 +28,7 @@ class Scoreboard():
 
         self.teams.append(Team(1, "GREEN TEAM"))
         self.teams.append(Team(2, "RED TEAM"))
-
+        self.dictionary = dictionary
         self.read_dictionary(dictionary)
         self._build()
 
@@ -38,6 +42,15 @@ class Scoreboard():
         for m in range(0,self.teams[0].num_players + self.teams[1].num_players):
             player_list.append([self.players[m].name, self.players[m].score, self.players[m].team])
         return player_list
+    
+    def hit_process(self, hit_id, shooter_id, hit_loss = 0, shooter_gain = 100):
+        self.change_score(id = shooter_id, score = shooter_gain)
+        self.change_score(id = hit_id, score = hit_loss)
+
+    def change_score(self, id, score):
+        for n in range(len(self.players)):
+            if self.players[n].id == id:
+                self.players[n].change_score(score)
 
     def _build(self):
         for player in self.players:
