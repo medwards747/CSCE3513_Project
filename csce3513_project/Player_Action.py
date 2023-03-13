@@ -1,5 +1,8 @@
 from tkinter import *
 import random
+from .Network import NetworkReceiver, NetworkSender
+from .Music import musicPlay
+from .game import Scoreboard
 
 class Flash_Capable_Label(Label):
 
@@ -67,13 +70,20 @@ class Hit_Feed(Frame):
     def __init__(self, team_dictionary, **kwrds):
         self.player_name_label_settings = {#player labels different anchor depending on side needs changed during creation
                                   "padx":2,
-                                  "pady":2, "bg":"gray34",
-                                  "width":28, "height":1, "font":("Arial", 10)}
+                                  "pady":2,
+                                  "bg":"gray34",
+                                  "width":28,
+                                  "height":1,
+                                  "font":("Arial", 10)}
 
         self.hit_label_settings = {"padx":2,
-                          "pady":2, "bg":"gray34", "fg":"CadetBlue1",
-                          "anchor":CENTER,
-                          "width":7, "height":1, "font":("Arial", 10)}
+                                   "pady":2,
+                                   "bg":"gray34",
+                                   "fg":"CadetBlue1",
+                                   "anchor":CENTER,
+                                   "width":7,
+                                   "height":1,
+                                   "font":("Arial", 10)}
         super().__init__(**kwrds)
         self.team_dictionary = team_dictionary
         self.list_of_hits = []
@@ -89,7 +99,27 @@ class Hit_Feed(Frame):
             self.hit_labels[n].grid(row=n, column=1)
             self.right_labels[n].grid(row=n, column=2)
 
-    
+    def build_hashtable(self, dictionary):
+        self.hashtable = {}
+        for k in dictionary:
+            for n in dictionary[k]:
+                self.hashtable[dictionary[k][n][0]] = []
+                self.hashtable[dictionary[k][n][0]].append(dictionary[k][n][1])
+                if k == "Green":
+                    self.hashtable[dictionary[k][n][0]].append("limegreen")
+                elif k == "Red":
+                    self.hashtable[dictionary[k][n][0]].append("red")
+
+    def process_hit(self, tuple):
+        shooter_id = tuple[0]
+        hit_id = tuple[1]
+        hit = []
+        hit.append(self.hashtable[shooter_id][0])
+        hit.append(self.hashtable[shooter_id][1])
+        hit.append(self.hashtable[hit_id][0])
+        hit.append(self.hashtable[hit_id][1])
+        self.add_hit(hit)
+
     def add_hit(self, hit):
         self.list_of_hits.append(hit)
         self.update_hitfeed()
@@ -124,15 +154,41 @@ class Player_Action():
     def __init__(self, scoreboard) -> None:
 
         self.scoreboard = scoreboard
+        self.Reciever = NetworkReceiver
+        self.Sender = NetworkSender
+    
+    def gameplay_loop(self):
+        results = self.Reciever.process_results()
+        if results != []:
+            for i in results:
+                shooter_id = results[i][0]
+                hit_id = results[i][1]
+                self.Sender.send_hit_player(hit_id)
+                self.scoreboard.hit_process(hit_id = hit_id, shooter_id = shooter_id, hit_loss = 0, shooter_gain = 100)
+                self.page_dict["Contents"]["HitFeedFrame"].process_hit(results[i])
+                
+            
 
     def test_hit(self, event):
+        '''Simple keypress test for functionality of hitfeed'''
         test_list =[["1","limegreen","2", "red"],["Opus","limegreen","Matt", "red"],["Matt", "red","Opus","limegreen"]]
         rand = random.randint(0,2)
 
         self.page_dict["Contents"]["HitFeedFrame"].add_hit(test_list[rand])
 
+    def update_team_score(self):
+        green_score = 0
+        red_score = 0
+        for n in range(0,15):
+            green_score += int(self.page_dict["Contents"]["GreenPlayerFrame"]["ScoreLabelList"].cget(Text))
+            red_score += int(self.page_dict["Contents"]["RedPlayerFrame"]["ScoreLabelList"].cget(Text))
+        self.page_dict["Contents"]["GreenFrame"]["TeamScoreLabel"].config(green_score)
+        self.page_dict["Contents"]["RedFrame"]["TeamScoreLabel"].config(red_score)
+
+        self.page_dict["Contents"]["GreenFrame"]["Frame"].after(500, self.update_team_score)
     
     def read_scoreboard(self):
+        '''Reads in the scoreboard information from the scoreboard object'''
         player_list = self.scoreboard.export_scoreboard()
         green_list = []
         red_list = []
@@ -148,6 +204,14 @@ class Player_Action():
 
 
     def read_player_data(self, team_list, frame):
+        '''Reads a list of player information into a frame
+        
+           Args:
+           team_list (list): list of lists, each sublist containing codename and score of player
+           frame (tk.frame): Frame that contains the list of labels to read information into
+           
+           Notes:
+           Currently hardcoded for working with Player_Action structure'''
         for n in range(0,len(team_list)):
             self.page_dict["Contents"][frame]["CNLabelList"][n].config(text = team_list[n][0])
             self.page_dict["Contents"][frame]["ScoreLabelList"][n].config(text = team_list[n][1])
@@ -210,13 +274,20 @@ class Player_Action():
 
         self.player_label_settings = {
                                       "padx":2,
-                                      "pady":2, "bg":"gray34",
-                                        "anchor":W,
-                                         "width":32, "height":1, "font":("Arial", 12)}
+                                      "pady":2,
+                                      "bg":"gray34",
+                                      "anchor":W,
+                                      "width":32,
+                                      "height":1, 
+                                      "font":("Arial", 12)}
+
         self.player_score_settings = {"padx":2,
-                                        "pady":2, "bg":"gray34",
-                                        "anchor":E,
-                                         "width":7, "height":1, "font":("Arial", 12)}
+                                      "pady":2, 
+                                      "bg":"gray34",
+                                      "anchor":E,
+                                      "width":7,
+                                      "height":1,
+                                      "font":("Arial", 12)}
 
         self.timer_label_settings = {"padx" :   2,
                                      "pady" :   2,
@@ -230,10 +301,11 @@ class Player_Action():
                                      "timer_start":361,
                                      "relief":RAISED
                                     }
+
+        #initialize structure of tk window
         self.page_dict = {}
         self.page_dict["Window"] = Tk()
         self.page_dict["Contents"] = {}
-
         self.page_dict["Window"].config(bg = "gray24")
         
         #list of frame names
@@ -251,7 +323,10 @@ class Player_Action():
             self.page_dict["Contents"][k]["Frame"].config(relief=RAISED, bd = 5)
 
         self.page_dict["Contents"]["GreenFrame"]["TeamNameLabel"] = Flash_Capable_Label(master=self.page_dict["Contents"]["GreenFrame"]["Frame"],
-                                                                            text="Green Team ", fg = "lime green", original="gray34", **self.team_label_settings)
+                                                                                        text="Green Team ",
+                                                                                        fg = "lime green",
+                                                                                        original="gray34",
+                                                                                        **self.team_label_settings)
         self.page_dict["Contents"]["RedFrame"]["TeamNameLabel"] = Flash_Capable_Label(master=self.page_dict["Contents"]["RedFrame"]["Frame"],
                                                                             text="Red Team ", fg="red", original="gray34",**self.team_label_settings)
         self.page_dict["Contents"]["GreenFrame"]["TeamScoreLabel"] = Flash_Capable_Label(master=self.page_dict["Contents"]["GreenFrame"]["Frame"],
@@ -307,7 +382,7 @@ class Player_Action():
 
         #mainloop ---------------------------------------------------------------------------------------
 
-        self.page_dict["Window"].bind("<Key>", self.test_hit)
+        self.page_dict["Window"].bind("<Key>", self.test_hit) #test keypress, remove later
         outer = ["GreenFrame", "RedFrame"]
         inner = ["TeamNameLabel", "TeamScoreLabel"]
         for k in outer:
@@ -315,32 +390,8 @@ class Player_Action():
                 self.page_dict["Contents"][k][l].flash()
         self.page_dict["Window"].after(1,self.check_flash)
         self.read_scoreboard()
+        self.page_dict["Contents"]["HitFeedFrame"].build_hashtable(self.scoreboard.dictionary)
+        self.update_team_score()
         self.page_dict["Contents"]["HitFeedFrame"].add_hits([["Opus","limegreen","Matt","red"]])
         self.page_dict["Window"].after(1,self.read_scoreboard)
         self.page_dict["Window"].mainloop()
-
-
-
-class Test_kf():
-
-    def __init__(self) -> None:
-
-        tk = Tk()
-        frame = Frame(tk)
-        frame.pack()
-        label_left = Label(master=frame,
-                       text = "left",
-                       fg = "lime green",
-                       anchor = E)
-        label_middle = Label(master = frame,
-                         text = " hit ",
-                         fg = "black")
-        label_right =   Label(master = frame,
-                          text = "right",
-                          fg = "red",
-                          anchor = W)
-        label_left.grid(row=0, column=0)
-        label_middle.grid(row=0, column=1)
-        label_right.grid(row=0,column=2)
-
-        tk.mainloop()
