@@ -1,8 +1,8 @@
 from tkinter import *
 import random
-from .Network import NetworkReceiver, NetworkSender
-from .Music import musicPlay
-from .game import Scoreboard
+from csce3513_project.Network import NetworkReceiver, NetworkSender
+#from Music import musicPlay
+from csce3513_project.game import Scoreboard
 
 class Flash_Capable_Label(Label):
 
@@ -104,15 +104,15 @@ class Hit_Feed(Frame):
         for k in dictionary:
             for n in dictionary[k]:
                 self.hashtable[dictionary[k][n][0]] = []
-                self.hashtable[dictionary[k][n][0]].append(dictionary[k][n][1])
+                self.hashtable[dictionary[k][n][0]].append(str(dictionary[k][n][1]))
                 if k == "Green":
                     self.hashtable[dictionary[k][n][0]].append("limegreen")
                 elif k == "Red":
                     self.hashtable[dictionary[k][n][0]].append("red")
 
     def process_hit(self, tuple):
-        shooter_id = tuple[0]
-        hit_id = tuple[1]
+        shooter_id = str(tuple[0])
+        hit_id = str(tuple[1])
         hit = []
         hit.append(self.hashtable[shooter_id][0])
         hit.append(self.hashtable[shooter_id][1])
@@ -166,6 +166,9 @@ class Player_Action():
                 self.Sender.send_hit_player(hit_id)
                 self.scoreboard.hit_process(hit_id = hit_id, shooter_id = shooter_id, hit_loss = 0, shooter_gain = 100)
                 self.page_dict["Contents"]["HitFeedFrame"].process_hit(results[i])
+                self.read_scoreboard()
+                self.update_team_score()
+        self.page_dict["Window"].after(333, self.gameplay_loop)
                 
             
 
@@ -393,5 +396,6 @@ class Player_Action():
         self.page_dict["Contents"]["HitFeedFrame"].build_hashtable(self.scoreboard.dictionary)
         self.update_team_score()
         self.page_dict["Contents"]["HitFeedFrame"].add_hits([["Opus","limegreen","Matt","red"]])
-        self.page_dict["Window"].after(1,self.read_scoreboard)
+        #self.page_dict["Window"].after(1,self.gameplay_loop)
         self.page_dict["Window"].mainloop()
+
