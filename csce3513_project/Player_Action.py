@@ -1,16 +1,17 @@
 from tkinter import *
 import random
 from csce3513_project.Network import NetworkReceiver, NetworkSender
-#from Music import musicPlay
+# from Music import musicPlay
 from csce3513_project.game import Scoreboard
+
 
 class Flash_Capable_Label(Label):
 
-    def __init__(self, original = "gray34", flash_bg = "white" ,delay = 1000, **kwrds):
+    def __init__(self, original="gray34", flash_bg="white", delay=1000, **kwrds):
         super().__init__(**kwrds)
-        self.delay = delay #time in ms to flash
-        self.current_flash_state = False #bool to track if should be flashing
-        self.flash_state = False #bool to track current state
+        self.delay = delay  # time in ms to flash
+        self.current_flash_state = False  # bool to track if should be flashing
+        self.flash_state = False  # bool to track current state
         self.original_bg = original
         self.flash_bg = flash_bg
 
@@ -24,7 +25,7 @@ class Flash_Capable_Label(Label):
             self.after(self.delay, self.flash)
         else:
             self.flash_state = False
-            self.config(bg = self.original_bg)
+            self.config(bg=self.original_bg)
             self.after(self.delay, self.flash)
 
     def flip_state(self):
@@ -33,14 +34,15 @@ class Flash_Capable_Label(Label):
 
     def stop_flashing(self):
         self.current_flash_state = False
-        self.config(bg = self.original_bg)
-    
+        self.config(bg=self.original_bg)
+
     def start_flashing(self):
         self.current_flash_state = True
 
+
 class Timer_Label(Label):
 
-    def __init__(self,timer_start = 361, **kwrds):
+    def __init__(self, timer_start=361, **kwrds):
         super().__init__(**kwrds)
         self.time_remaining = timer_start
         self.minutes = self.time_remaining // 60
@@ -53,37 +55,38 @@ class Timer_Label(Label):
                 self.minutes = self.time_remaining // 60
                 self.seconds = self.time_remaining % 60
                 if self.seconds < 10:
-                    self.config(text=str(self.minutes) + ":" + "0" + str(self.seconds))
+                    self.config(text=str(self.minutes) +
+                                ":" + "0" + str(self.seconds))
                 else:
-                    self.config(text=str(self.minutes) + ":" + str(self.seconds))
+                    self.config(text=str(self.minutes) +
+                                ":" + str(self.seconds))
                 self.after(1000, updateGUI)
-    
+
         updateGUI()
+
 
 class Hit_Feed(Frame):
     '''Frame that holds 45 labels split into three sections, each to hold a string and be supplied a color
-    
+
     '''
 
-    
-
     def __init__(self, team_dictionary, **kwrds):
-        self.player_name_label_settings = {#player labels different anchor depending on side needs changed during creation
-                                  "padx":2,
-                                  "pady":2,
-                                  "bg":"gray34",
-                                  "width":28,
-                                  "height":1,
-                                  "font":("Arial", 10)}
+        self.player_name_label_settings = {  # player labels different anchor depending on side needs changed during creation
+            "padx": 2,
+            "pady": 2,
+            "bg": "gray34",
+            "width": 28,
+            "height": 1,
+            "font": ("Arial", 10)}
 
-        self.hit_label_settings = {"padx":2,
-                                   "pady":2,
-                                   "bg":"gray34",
-                                   "fg":"CadetBlue1",
-                                   "anchor":CENTER,
-                                   "width":7,
-                                   "height":1,
-                                   "font":("Arial", 10)}
+        self.hit_label_settings = {"padx": 2,
+                                   "pady": 2,
+                                   "bg": "gray34",
+                                   "fg": "CadetBlue1",
+                                   "anchor": CENTER,
+                                   "width": 7,
+                                   "height": 1,
+                                   "font": ("Arial", 10)}
         super().__init__(**kwrds)
         self.team_dictionary = team_dictionary
         self.list_of_hits = []
@@ -91,21 +94,24 @@ class Hit_Feed(Frame):
         self.hit_labels = []
         self.right_labels = []
 
-        for n in range(0,15):
-            self.left_labels.append(Label(master = self, anchor = E, **self.player_name_label_settings))
-            self.hit_labels.append(Label(master = self, **self.hit_label_settings))
-            self.right_labels.append(Label(master = self, anchor=W, ** self.player_name_label_settings))
-            self.left_labels[n].grid(row=n,column=0)
+        for n in range(0, 15):
+            self.left_labels.append(
+                Label(master=self, anchor=E, **self.player_name_label_settings))
+            self.hit_labels.append(
+                Label(master=self, **self.hit_label_settings))
+            self.right_labels.append(
+                Label(master=self, anchor=W, ** self.player_name_label_settings))
+            self.left_labels[n].grid(row=n, column=0)
             self.hit_labels[n].grid(row=n, column=1)
             self.right_labels[n].grid(row=n, column=2)
 
     def build_hashtable(self, dictionary):
         self.hashtable = {}
         for k in dictionary:
-            #for key in dictionary
-            for n in range(0,15):
-                #for the 15 lists within the list the key grabs
-                #dictionary[k][n][0] returns the id of each player
+            # for key in dictionary
+            for n in range(0, 15):
+                # for the 15 lists within the list the key grabs
+                # dictionary[k][n][0] returns the id of each player
                 player_id = str(dictionary[k][n][0])
                 code_name = str(dictionary[k][n][1])
                 self.hashtable[player_id] = [0] * 2
@@ -114,7 +120,6 @@ class Hit_Feed(Frame):
                     self.hashtable[player_id][1] = "limegreen"
                 elif k == "Red":
                     self.hashtable[player_id][1] = "red"
-
 
     def process_hit(self, tuple):
         shooter_id = str(tuple[0])
@@ -129,7 +134,7 @@ class Hit_Feed(Frame):
     def add_hit(self, hit):
         self.list_of_hits.append(hit)
         self.update_hitfeed()
-    
+
     def add_hits(self, hits):
         for n in range(len(hits)):
             self.list_of_hits.append(hits[n])
@@ -139,20 +144,19 @@ class Hit_Feed(Frame):
         if len(self.list_of_hits) < 15:
             for n in range(len(self.list_of_hits)):
                 enum = -(n+1)
-                self.left_labels[n].config(text=self.list_of_hits[enum][0], fg = self.list_of_hits[enum][1])
-                self.hit_labels[n].config(text = "hit", fg = "CadetBlue1")
-                self.right_labels[n].config(text=self.list_of_hits[enum][2], fg=self.list_of_hits[enum][3])
+                self.left_labels[n].config(
+                    text=self.list_of_hits[enum][0], fg=self.list_of_hits[enum][1])
+                self.hit_labels[n].config(text="hit", fg="CadetBlue1")
+                self.right_labels[n].config(
+                    text=self.list_of_hits[enum][2], fg=self.list_of_hits[enum][3])
         else:
-            for n in range(0,15):
+            for n in range(0, 15):
                 enum = -(n+1)
-                self.left_labels[n].config(text=self.list_of_hits[enum][0], fg = self.list_of_hits[enum][1])
-                self.hit_labels[n].config(text = "hit", fg = "CadetBlue1")
-                self.right_labels[n].config(text=self.list_of_hits[enum][2], fg=self.list_of_hits[enum][3])
-
-
-
-        
-
+                self.left_labels[n].config(
+                    text=self.list_of_hits[enum][0], fg=self.list_of_hits[enum][1])
+                self.hit_labels[n].config(text="hit", fg="CadetBlue1")
+                self.right_labels[n].config(
+                    text=self.list_of_hits[enum][2], fg=self.list_of_hits[enum][3])
 
 
 class Player_Action():
@@ -160,28 +164,29 @@ class Player_Action():
     def __init__(self, scoreboard) -> None:
 
         self.scoreboard = scoreboard
-        self.Reciever = NetworkReceiver
-        self.Sender = NetworkSender
-    
+        self.Reciever = NetworkReceiver()
+        self.Sender = NetworkSender()
+
     def gameplay_loop(self):
         results = self.Reciever.process_results()
-        if results != []:
-            for i in results:
-                shooter_id = results[i][0]
-                hit_id = results[i][1]
+        if len(results) > 0:
+            for result in results:
+                shooter_id = result[0]
+                hit_id = result[1]
                 self.Sender.send_hit_player(hit_id)
-                self.scoreboard.hit_process(hit_id = hit_id, shooter_id = shooter_id, hit_loss = 0, shooter_gain = 100)
-                self.page_dict["Contents"]["HitFeedFrame"].process_hit(results[i])
+                self.scoreboard.hit_process(
+                    hit_id=hit_id, shooter_id=shooter_id, hit_loss=0, shooter_gain=100)
+                self.page_dict["Contents"]["HitFeedFrame"].process_hit(
+                    result)
                 self.read_scoreboard()
-                #self.update_team_score()
+                # self.update_team_score()
         self.page_dict["Window"].after(333, self.gameplay_loop)
-                
-            
 
     def test_hit(self, event):
         '''Simple keypress test for functionality of hitfeed'''
-        test_list =[["1","limegreen","2", "red"],["Opus","limegreen","Matt", "red"],["Matt", "red","Opus","limegreen"]]
-        rand = random.randint(0,2)
+        test_list = [["1", "limegreen", "2", "red"], [
+            "Opus", "limegreen", "Matt", "red"], ["Matt", "red", "Opus", "limegreen"]]
+        rand = random.randint(0, 2)
 
         self.page_dict["Contents"]["HitFeedFrame"].add_hit(test_list[rand])
     '''
@@ -199,14 +204,14 @@ class Player_Action():
         self.page_dict["Contents"]["RedFrame"]["TeamScoreLabel"].config(str(red_score))
 
         self.page_dict["Contents"]["GreenFrame"]["Frame"].after(500, self.update_team_score)'''
-    
+
     def read_scoreboard(self):
         '''Reads in the scoreboard information from the scoreboard object'''
         player_list = self.scoreboard.export_scoreboard()
         green_list = []
         red_list = []
 
-        for n in range(0,len(player_list)):
+        for n in range(0, len(player_list)):
             if player_list[n][2] == 1:
                 green_list.append(player_list[n])
             elif player_list[n][2] == 2:
@@ -215,23 +220,20 @@ class Player_Action():
         self.read_player_data(green_list, "GreenPlayerFrame")
         self.read_player_data(red_list, "RedPlayerFrame")
 
-
     def read_player_data(self, team_list, frame):
         '''Reads a list of player information into a frame
-        
+
            Args:
            team_list (list): list of lists, each sublist containing codename and score of player
            frame (tk.frame): Frame that contains the list of labels to read information into
-           
+
            Notes:
            Currently hardcoded for working with Player_Action structure'''
-        for n in range(0,len(team_list)):
-            self.page_dict["Contents"][frame]["CNLabelList"][n].config(text = team_list[n][0])
-            self.page_dict["Contents"][frame]["ScoreLabelList"][n].config(text = team_list[n][1])
-
-
-
-
+        for n in range(0, len(team_list)):
+            self.page_dict["Contents"][frame]["CNLabelList"][n].config(
+                text=team_list[n][0])
+            self.page_dict["Contents"][frame]["ScoreLabelList"][n].config(
+                text=team_list[n][1])
 
     def check_flash(self):
         '''Grabs currently displayed scores on display then tests which labels should be flashing
@@ -242,9 +244,10 @@ class Player_Action():
         '''
         outer = ["GreenFrame", "RedFrame"]
         inner = ["TeamScoreLabel", "TeamNameLabel"]
-        green_score = int(self.page_dict["Contents"]["GreenFrame"]["TeamScoreLabel"].cget("text"))
-        red_score   = int(self.page_dict["Contents"]["RedFrame"]["TeamScoreLabel"].cget("text"))
-
+        green_score = int(
+            self.page_dict["Contents"]["GreenFrame"]["TeamScoreLabel"].cget("text"))
+        red_score = int(self.page_dict["Contents"]
+                        ["RedFrame"]["TeamScoreLabel"].cget("text"))
 
         if green_score == red_score:
             for k in outer:
@@ -264,149 +267,160 @@ class Player_Action():
                         self.page_dict["Contents"][k][l].start_flashing()
                     else:
                         self.page_dict["Contents"][k][l].stop_flashing()
-        self.page_dict["Window"].after(1000,self.check_flash)
-    
+        self.page_dict["Window"].after(1000, self.check_flash)
+
     def create_play_action(self):
 
-        #dictionary for settings labels will need {master, fg, text} in line
-        self.team_label_settings = {"font":("Arial", 25),
-                                    "anchor":W,
-                                    "pady":1,
-                                    "padx":2,
-                                    "bd":5,
-                                    "bg" : "gray34",
-                                    "width":12}
+        # dictionary for settings labels will need {master, fg, text} in line
+        self.team_label_settings = {"font": ("Arial", 25),
+                                    "anchor": W,
+                                    "pady": 1,
+                                    "padx": 2,
+                                    "bd": 5,
+                                    "bg": "gray34",
+                                    "width": 12}
 
-        self.team_score_settings = {"font":("Arial", 25),
-                                    "anchor":E,
-                                    "pady":1,
-                                    "padx":2,
-                                    "bd":5,
-                                    "bg" : "gray34",
-                                    "width":5}
+        self.team_score_settings = {"font": ("Arial", 25),
+                                    "anchor": E,
+                                    "pady": 1,
+                                    "padx": 2,
+                                    "bd": 5,
+                                    "bg": "gray34",
+                                    "width": 5}
 
         self.player_label_settings = {
-                                      "padx":2,
-                                      "pady":2,
-                                      "bg":"gray34",
-                                      "anchor":W,
-                                      "width":32,
-                                      "height":1, 
-                                      "font":("Arial", 12)}
+            "padx": 2,
+            "pady": 2,
+            "bg": "gray34",
+            "anchor": W,
+            "width": 32,
+            "height": 1,
+            "font": ("Arial", 12)}
 
-        self.player_score_settings = {"padx":2,
-                                      "pady":2, 
-                                      "bg":"gray34",
-                                      "anchor":E,
-                                      "width":7,
-                                      "height":1,
-                                      "font":("Arial", 12)}
+        self.player_score_settings = {"padx": 2,
+                                      "pady": 2,
+                                      "bg": "gray34",
+                                      "anchor": E,
+                                      "width": 7,
+                                      "height": 1,
+                                      "font": ("Arial", 12)}
 
-        self.timer_label_settings = {"padx" :   2,
-                                     "pady" :   2,
-                                     "bg"   :   "gray34",
-                                     "anchor":CENTER,
-                                     "bd":5,
-                                     "width":5,
-                                     "height":1,
-                                     "font":("Arial", 25),
-                                     "fg":"CadetBlue1",
-                                     "timer_start":361,
-                                     "relief":RAISED
-                                    }
+        self.timer_label_settings = {"padx":   2,
+                                     "pady":   2,
+                                     "bg":   "gray34",
+                                     "anchor": CENTER,
+                                     "bd": 5,
+                                     "width": 5,
+                                     "height": 1,
+                                     "font": ("Arial", 25),
+                                     "fg": "CadetBlue1",
+                                     "timer_start": 361,
+                                     "relief": RAISED
+                                     }
 
-        #initialize structure of tk window
+        # initialize structure of tk window
         self.page_dict = {}
         self.page_dict["Window"] = Tk()
         self.page_dict["Contents"] = {}
-        self.page_dict["Window"].config(bg = "gray24")
-        
-        #list of frame names
+        self.page_dict["Window"].config(bg="gray24")
+
+        # list of frame names
         frame_list = ["GreenFrame",
                       "RedFrame",
                       "GreenPlayerFrame",
                       "RedPlayerFrame"]
         for k in frame_list:
-            self.page_dict["Contents"][k] = {"Frame":Frame(self.page_dict["Window"])}
+            self.page_dict["Contents"][k] = {
+                "Frame": Frame(self.page_dict["Window"])}
 
-        
-
-        #add reliefs to all frames with border width to make it visible
+        # add reliefs to all frames with border width to make it visible
         for k in frame_list:
-            self.page_dict["Contents"][k]["Frame"].config(relief=RAISED, bd = 5)
+            self.page_dict["Contents"][k]["Frame"].config(relief=RAISED, bd=5)
 
         self.page_dict["Contents"]["GreenFrame"]["TeamNameLabel"] = Flash_Capable_Label(master=self.page_dict["Contents"]["GreenFrame"]["Frame"],
                                                                                         text="Green Team ",
-                                                                                        fg = "lime green",
+                                                                                        fg="lime green",
                                                                                         original="gray34",
                                                                                         **self.team_label_settings)
         self.page_dict["Contents"]["RedFrame"]["TeamNameLabel"] = Flash_Capable_Label(master=self.page_dict["Contents"]["RedFrame"]["Frame"],
-                                                                            text="Red Team ", fg="red", original="gray34",**self.team_label_settings)
+                                                                                      text="Red Team ", fg="red", original="gray34", **self.team_label_settings)
         self.page_dict["Contents"]["GreenFrame"]["TeamScoreLabel"] = Flash_Capable_Label(master=self.page_dict["Contents"]["GreenFrame"]["Frame"],
-                                                                            text="0", fg = "lime green",original="gray34", **self.team_score_settings)
+                                                                                         text="0", fg="lime green", original="gray34", **self.team_score_settings)
         self.page_dict["Contents"]["RedFrame"]["TeamScoreLabel"] = Flash_Capable_Label(master=self.page_dict["Contents"]["RedFrame"]["Frame"],
-                                                                            text="0", fg = "red", original="gray34",**self.team_score_settings)
-        
+                                                                                       text="0", fg="red", original="gray34", **self.team_score_settings)
 
-        self.page_dict["Contents"]["GreenPlayerFrame"]["CNLabelList"] = [0] * 15
+        self.page_dict["Contents"]["GreenPlayerFrame"]["CNLabelList"] = [
+            0] * 15
         self.page_dict["Contents"]["RedPlayerFrame"]["CNLabelList"] = [0] * 15
-        self.page_dict["Contents"]["GreenPlayerFrame"]["ScoreLabelList"] = [0] * 15
-        self.page_dict["Contents"]["RedPlayerFrame"]["ScoreLabelList"] = [0] * 15
+        self.page_dict["Contents"]["GreenPlayerFrame"]["ScoreLabelList"] = [
+            0] * 15
+        self.page_dict["Contents"]["RedPlayerFrame"]["ScoreLabelList"] = [
+            0] * 15
         temp_list = ["RedPlayerFrame", "GreenPlayerFrame"]
-        
-        for n in range(0,15):
-            self.page_dict["Contents"]["RedPlayerFrame"]["CNLabelList"][n]=Label(master = self.page_dict["Contents"]["RedPlayerFrame"]["Frame"],
-                                                                                fg = "red",**self.player_label_settings)
-            self.page_dict["Contents"]["RedPlayerFrame"]["CNLabelList"][n].grid(row=n, column = 0)
-            self.page_dict["Contents"]["GreenPlayerFrame"]["CNLabelList"][n]=Label(master = self.page_dict["Contents"]["GreenPlayerFrame"]["Frame"],
-                                                                                   fg = "lime green", **self.player_label_settings)
-            self.page_dict["Contents"]["GreenPlayerFrame"]["CNLabelList"][n].grid(row=n, column = 0)
-            
-            self.page_dict["Contents"]["RedPlayerFrame"]["ScoreLabelList"][n]=Label(master = self.page_dict["Contents"]["RedPlayerFrame"]["Frame"],
-                                                                                fg = "red",**self.player_score_settings)
-            self.page_dict["Contents"]["RedPlayerFrame"]["ScoreLabelList"][n].grid(row=n, column = 1)
-            self.page_dict["Contents"]["GreenPlayerFrame"]["ScoreLabelList"][n]=Label(master = self.page_dict["Contents"]["GreenPlayerFrame"]["Frame"],
-                                                                                   fg = "lime green", **self.player_score_settings)
-            self.page_dict["Contents"]["GreenPlayerFrame"]["ScoreLabelList"][n].grid(row=n, column = 1)
 
+        for n in range(0, 15):
+            self.page_dict["Contents"]["RedPlayerFrame"]["CNLabelList"][n] = Label(master=self.page_dict["Contents"]["RedPlayerFrame"]["Frame"],
+                                                                                   fg="red", **self.player_label_settings)
+            self.page_dict["Contents"]["RedPlayerFrame"]["CNLabelList"][n].grid(
+                row=n, column=0)
+            self.page_dict["Contents"]["GreenPlayerFrame"]["CNLabelList"][n] = Label(master=self.page_dict["Contents"]["GreenPlayerFrame"]["Frame"],
+                                                                                     fg="lime green", **self.player_label_settings)
+            self.page_dict["Contents"]["GreenPlayerFrame"]["CNLabelList"][n].grid(
+                row=n, column=0)
 
-        
+            self.page_dict["Contents"]["RedPlayerFrame"]["ScoreLabelList"][n] = Label(master=self.page_dict["Contents"]["RedPlayerFrame"]["Frame"],
+                                                                                      fg="red", **self.player_score_settings)
+            self.page_dict["Contents"]["RedPlayerFrame"]["ScoreLabelList"][n].grid(
+                row=n, column=1)
+            self.page_dict["Contents"]["GreenPlayerFrame"]["ScoreLabelList"][n] = Label(master=self.page_dict["Contents"]["GreenPlayerFrame"]["Frame"],
+                                                                                        fg="lime green", **self.player_score_settings)
+            self.page_dict["Contents"]["GreenPlayerFrame"]["ScoreLabelList"][n].grid(
+                row=n, column=1)
 
-        self.page_dict["Contents"]["GreenFrame"]["Frame"].grid(row=0,column=0)
-        self.page_dict["Contents"]["RedFrame"]["Frame"].grid(row=0,column=2)
-        self.page_dict["Contents"]["GreenPlayerFrame"]["Frame"].grid(row=1,column=0)
-        self.page_dict["Contents"]["RedPlayerFrame"]["Frame"].grid(row=1,column=2)
+        self.page_dict["Contents"]["GreenFrame"]["Frame"].grid(row=0, column=0)
+        self.page_dict["Contents"]["RedFrame"]["Frame"].grid(row=0, column=2)
+        self.page_dict["Contents"]["GreenPlayerFrame"]["Frame"].grid(
+            row=1, column=0)
+        self.page_dict["Contents"]["RedPlayerFrame"]["Frame"].grid(
+            row=1, column=2)
         temp_list = ["RedFrame", "GreenFrame"]
         for k in temp_list:
-            self.page_dict["Contents"][k]["TeamNameLabel"].grid(row = 0, column = 0)
-            self.page_dict["Contents"][k]["TeamScoreLabel"].grid(row = 0, column = 1)
+            self.page_dict["Contents"][k]["TeamNameLabel"].grid(
+                row=0, column=0)
+            self.page_dict["Contents"][k]["TeamScoreLabel"].grid(
+                row=0, column=1)
 
-        #creation of timer frame
+        # creation of timer frame
         self.page_dict["Contents"]["TimerFrame"] = {}
-        self.page_dict["Contents"]["TimerFrame"]["Frame"] = Frame(master = self.page_dict["Window"])
-        self.page_dict["Contents"]["TimerFrame"]["TimerLabel"] = Timer_Label(master = self.page_dict["Contents"]["TimerFrame"]["Frame"],
+        self.page_dict["Contents"]["TimerFrame"]["Frame"] = Frame(
+            master=self.page_dict["Window"])
+        self.page_dict["Contents"]["TimerFrame"]["TimerLabel"] = Timer_Label(master=self.page_dict["Contents"]["TimerFrame"]["Frame"],
                                                                              **self.timer_label_settings)
-        self.page_dict["Contents"]["TimerFrame"]["Frame"].grid(row=0,column=1)
-        self.page_dict["Contents"]["TimerFrame"]["TimerLabel"].grid(row=0,column=0)
+        self.page_dict["Contents"]["TimerFrame"]["Frame"].grid(row=0, column=1)
+        self.page_dict["Contents"]["TimerFrame"]["TimerLabel"].grid(
+            row=0, column=0)
 
-        #creation of hitfeed 
-        self.page_dict["Contents"]["HitFeedFrame"] = Hit_Feed(team_dictionary={},master = self.page_dict["Window"], bd=5, relief=RAISED)
+        # creation of hitfeed
+        self.page_dict["Contents"]["HitFeedFrame"] = Hit_Feed(
+            team_dictionary={}, master=self.page_dict["Window"], bd=5, relief=RAISED)
         self.page_dict["Contents"]["HitFeedFrame"].grid(row=1, column=1)
 
-        #mainloop ---------------------------------------------------------------------------------------
+        # mainloop ---------------------------------------------------------------------------------------
 
-        self.page_dict["Window"].bind("<Key>", self.test_hit) #test keypress, remove later
+        # test keypress, remove later
+        self.page_dict["Window"].bind("<Key>", self.test_hit)
         outer = ["GreenFrame", "RedFrame"]
         inner = ["TeamNameLabel", "TeamScoreLabel"]
         for k in outer:
             for l in inner:
                 self.page_dict["Contents"][k][l].flash()
-        self.page_dict["Window"].after(1,self.check_flash)
+        self.page_dict["Window"].after(1, self.check_flash)
         self.read_scoreboard()
-        #print(self.scoreboard.dictionary)
-        self.page_dict["Contents"]["HitFeedFrame"].build_hashtable(self.scoreboard.dictionary)
-        #self.update_team_score()
-        self.page_dict["Contents"]["HitFeedFrame"].add_hits([["Opus","limegreen","Matt","red"]])
-        #self.page_dict["Window"].after(1,self.gameplay_loop)
+        # print(self.scoreboard.dictionary)
+        self.page_dict["Contents"]["HitFeedFrame"].build_hashtable(
+            self.scoreboard.dictionary)
+        # self.update_team_score()
+        self.page_dict["Contents"]["HitFeedFrame"].add_hits(
+            [["Opus", "limegreen", "Matt", "red"]])
+        self.page_dict["Window"].after(1, self.gameplay_loop)
         self.page_dict["Window"].mainloop()
-
