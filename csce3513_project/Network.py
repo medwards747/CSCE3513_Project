@@ -133,6 +133,8 @@ class NetworkReceiver:
                 result = self._result_queue.get(block=block, timeout=timeout)
                 result = result.decode()
                 result = result.split(":")
+                if len(result) != 2:
+                    raise IndexError
                 id_transmit = int(result[0])
                 id_hit = int(result[1])
             except Empty:
