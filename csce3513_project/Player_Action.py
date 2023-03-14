@@ -102,13 +102,19 @@ class Hit_Feed(Frame):
     def build_hashtable(self, dictionary):
         self.hashtable = {}
         for k in dictionary:
-            for n in dictionary[k]:
-                self.hashtable[dictionary[k][n][0]] = []
-                self.hashtable[dictionary[k][n][0]].append(str(dictionary[k][n][1]))
+            #for key in dictionary
+            for n in range(0,15):
+                #for the 15 lists within the list the key grabs
+                #dictionary[k][n][0] returns the id of each player
+                player_id = str(dictionary[k][n][0])
+                code_name = str(dictionary[k][n][1])
+                self.hashtable[player_id] = [0] * 2
+                self.hashtable[player_id][0] = code_name
                 if k == "Green":
-                    self.hashtable[dictionary[k][n][0]].append("limegreen")
+                    self.hashtable[player_id][1] = "limegreen"
                 elif k == "Red":
-                    self.hashtable[dictionary[k][n][0]].append("red")
+                    self.hashtable[player_id][1] = "red"
+
 
     def process_hit(self, tuple):
         shooter_id = str(tuple[0])
@@ -167,7 +173,7 @@ class Player_Action():
                 self.scoreboard.hit_process(hit_id = hit_id, shooter_id = shooter_id, hit_loss = 0, shooter_gain = 100)
                 self.page_dict["Contents"]["HitFeedFrame"].process_hit(results[i])
                 self.read_scoreboard()
-                self.update_team_score()
+                #self.update_team_score()
         self.page_dict["Window"].after(333, self.gameplay_loop)
                 
             
@@ -178,17 +184,21 @@ class Player_Action():
         rand = random.randint(0,2)
 
         self.page_dict["Contents"]["HitFeedFrame"].add_hit(test_list[rand])
-
+    '''
     def update_team_score(self):
-        green_score = 0
-        red_score = 0
+        green_score = int(0)
+        red_score = int(0)
         for n in range(0,15):
-            green_score += int(self.page_dict["Contents"]["GreenPlayerFrame"]["ScoreLabelList"].cget(Text))
-            red_score += int(self.page_dict["Contents"]["RedPlayerFrame"]["ScoreLabelList"].cget(Text))
-        self.page_dict["Contents"]["GreenFrame"]["TeamScoreLabel"].config(green_score)
-        self.page_dict["Contents"]["RedFrame"]["TeamScoreLabel"].config(red_score)
+            green_to_add = self.page_dict["Contents"]["GreenPlayerFrame"]["ScoreLabelList"][n].cget("text")
+            red_to_add = self.page_dict["Contents"]["RedPlayerFrame"]["ScoreLabelList"][n].cget("text")
+            if green_to_add != "":
+                green_score += int(green_to_add)
+            if red_to_add != "":
+                red_score += int(red_to_add)
+        self.page_dict["Contents"]["GreenFrame"]["TeamScoreLabel"].config(str(green_score))
+        self.page_dict["Contents"]["RedFrame"]["TeamScoreLabel"].config(str(red_score))
 
-        self.page_dict["Contents"]["GreenFrame"]["Frame"].after(500, self.update_team_score)
+        self.page_dict["Contents"]["GreenFrame"]["Frame"].after(500, self.update_team_score)'''
     
     def read_scoreboard(self):
         '''Reads in the scoreboard information from the scoreboard object'''
@@ -393,8 +403,9 @@ class Player_Action():
                 self.page_dict["Contents"][k][l].flash()
         self.page_dict["Window"].after(1,self.check_flash)
         self.read_scoreboard()
+        #print(self.scoreboard.dictionary)
         self.page_dict["Contents"]["HitFeedFrame"].build_hashtable(self.scoreboard.dictionary)
-        self.update_team_score()
+        #self.update_team_score()
         self.page_dict["Contents"]["HitFeedFrame"].add_hits([["Opus","limegreen","Matt","red"]])
         #self.page_dict["Window"].after(1,self.gameplay_loop)
         self.page_dict["Window"].mainloop()
