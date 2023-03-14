@@ -173,11 +173,16 @@ class Player_Action():
             for result in results:
                 shooter_id = result[0]
                 hit_id = result[1]
+                try:
+                    self.page_dict["Contents"]["HitFeedFrame"].process_hit(
+                        result)
+                except KeyError as e:
+                    print(f"ERROR: Invalid player ID received: {e}")
+                    self.page_dict["Window"].after(333, self.gameplay_loop)
+                    return
                 self.Sender.send_hit_player(hit_id)
                 self.scoreboard.hit_process(
                     hit_id=hit_id, shooter_id=shooter_id, hit_loss=0, shooter_gain=100)
-                self.page_dict["Contents"]["HitFeedFrame"].process_hit(
-                    result)
                 self.read_scoreboard()
                 # self.update_team_score()
         self.page_dict["Window"].after(333, self.gameplay_loop)
