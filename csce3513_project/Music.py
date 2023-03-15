@@ -37,36 +37,46 @@ class musicPlay():
     def pause(self):
         pygame.mixer.music.pause()
 
+    def get_selection(self):
+        return self.selection
+
     # register a Button being pressed
     def clicked(self, widget):
         chosenTrack = "Random"
         if widget == self._button_1:
             print('Track 1')
             chosenTrack = "Track 1"
+            self.selection = 0
             self.play(self.track_paths[0])
         elif widget == self._button_2:
             print('Track 2')
             chosenTrack = "Track 2"
+            self.selection = 1
             self.play(self.track_paths[1])
         elif widget == self._button_3:
             print('Track 3')
             chosenTrack = "Track 3"
+            self.selection = 2
             self.play(self.track_paths[2])
         elif widget == self._button_4:
             print('Track 4')
             chosenTrack = "Track 4"
+            self.selection = 3
             self.play(self.track_paths[3])
         elif widget == self._button_5:
             print('Track 5')
             chosenTrack = "Track 5"
+            self.selection = 4
             self.play(self.track_paths[4])
         elif widget == self._button_6:
             print('Track 6')
             chosenTrack = "Track 6"
+            self.selection = 5
             self.play(self.track_paths[5])
         elif widget == self._button_7:
             print('Track 7')
             chosenTrack = "Track 7"
+            self.selection = 6
             self.play(self.track_paths[6])
         return chosenTrack
 
@@ -74,6 +84,9 @@ class musicPlay():
         # creates music selection window
         self.win = Tk()
         self.win.title("Music Selection")
+
+        # Start 1st track
+        self.play(self.track_paths[0])
 
         width, height = 1000, 700
         screen_width = self.win.winfo_screenwidth()
@@ -160,9 +173,13 @@ class musicPlay():
 
         self.win.mainloop()
 
-    def __init__(self, track: int) -> None:
+        # Stop the music
+        pygame.mixer.music.stop()
+
+    def __init__(self, track: int, autoplay=True) -> None:
         # initialize music player
         pygame.init()
+        self.selection = None
 
         # list all music tracks
         track_dir = 'csce3513_project/photon_tracks/'
@@ -170,4 +187,5 @@ class musicPlay():
         self.track_paths = [track_dir + i for i in tracks]
         # default music selection
         pygame.mixer.music.load(self.track_paths[track])
-        pygame.mixer.music.play()
+        if autoplay:
+            pygame.mixer.music.play()
