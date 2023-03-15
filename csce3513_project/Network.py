@@ -1,6 +1,6 @@
 import logging
 import socket
-import multiprocessing
+import multiprocessing as mp
 import select
 from queue import Empty
 from typing import Union
@@ -68,9 +68,9 @@ class NetworkReceiver:
         self._listen_address = listen_address
         self._listen_port = listen_port
         self._run = True
-        self._manager = multiprocessing.Manager()
-        self._stop_flag = self._manager.Value("B", 0)
-        self._result_queue = self._manager.Queue()
+        manager = mp.Manager()
+        self._stop_flag = manager.Value("B", 0)
+        self._result_queue = manager.Queue()
         self._logger = logging.getLogger()
 
         # Start the server when object is created
@@ -99,7 +99,7 @@ class NetworkReceiver:
         """
         self._logger.debug(
             f"Network receiver starting on {self._listen_address}:{self._listen_port}")
-        self._t = multiprocessing.Process(target=self._rx)
+        self._t = mp.Process(target=self._rx)
 
         self._t.start()
 
