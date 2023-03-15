@@ -1,8 +1,7 @@
 from tkinter import *
 import random
+from csce3513_project import Music
 from csce3513_project.Network import NetworkReceiver, NetworkSender
-from csce3513_project.Music import musicPlay
-from csce3513_project.game import Scoreboard
 
 
 class Flash_Capable_Label(Label):
@@ -161,9 +160,10 @@ class Hit_Feed(Frame):
 
 class Player_Action():
 
-    def __init__(self, scoreboard) -> None:
+    def __init__(self, scoreboard, music_selection) -> None:
 
         self.scoreboard = scoreboard
+        self.music_selection = music_selection
         self.Reciever = NetworkReceiver()
         self.Sender = NetworkSender()
 
@@ -427,4 +427,5 @@ class Player_Action():
         self.page_dict["Contents"]["HitFeedFrame"].add_hits(
             [["Opus", "limegreen", "Matt", "red"]])
         self.page_dict["Window"].after(1, self.gameplay_loop)
+        Music.musicPlay(self.music_selection)
         self.page_dict["Window"].mainloop()
