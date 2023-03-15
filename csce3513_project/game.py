@@ -33,9 +33,10 @@ class Scoreboard():
         self._build()
 
     def add_player(self, ID, NAME, TEAM):
+        print("attempting to add player")
         if not ((ID == "Empty ID") or (NAME == "Empty Slot")):
             self.player_count += 1
-            self.players.append(Player(self.player_count, ID, NAME, 0, TEAM))
+            self.players.append(Player(self.player_count, ID, NAME, TEAM, 0))
     
     def export_scoreboard(self):
         player_list = []
@@ -96,18 +97,17 @@ class Scoreboard():
 
     def read_dictionary(self, dictionary):
         # read_dictionary() will be used to read player data and add to scoreboard from page.py
-        for green in dictionary:
-            if (green == "Green"):
+        for key in dictionary:
+            if (key == "Green"):
                 for n in range(0, 15):
-                    if dictionary[green][n][0] != "Empty ID":
+                    if dictionary[key][n][0] != "Empty ID":
                         self.add_player(
-                            dictionary[green][n][0], dictionary[green][n][1], 1)
-        for red in dictionary:
-            if (red == "Red"):
+                            ID = dictionary[key][n][0], NAME = dictionary[key][n][1], TEAM = 1)
+            elif (key == "Red"):
                 for n in range(0, 15):
-                    if dictionary[red][n][0] != "Empty ID":
+                    if dictionary[key][n][0] != "Empty ID":
                         self.add_player(
-                            dictionary[red][n][0], dictionary[red][n][1], 2)
+                            ID = dictionary[key][n][0], NAME = dictionary[key][n][1], TEAM = 2)
 
     def update_score(self, player_id, score):
         for player in self.players:
