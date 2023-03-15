@@ -1,7 +1,7 @@
 from tkinter import *
 import random
 from csce3513_project.Network import NetworkReceiver, NetworkSender
-# from Music import musicPlay
+from csce3513_project.Music import musicPlay
 from csce3513_project.game import Scoreboard
 
 
@@ -184,6 +184,7 @@ class Player_Action():
                 self.scoreboard.hit_process(
                     hit_id=hit_id, shooter_id=shooter_id, hit_loss=0, shooter_gain=100)
                 self.read_scoreboard()
+                self.update_team_score()
                 # self.update_team_score()
         self.page_dict["Window"].after(333, self.gameplay_loop)
 
@@ -194,7 +195,7 @@ class Player_Action():
         rand = random.randint(0, 2)
 
         self.page_dict["Contents"]["HitFeedFrame"].add_hit(test_list[rand])
-    '''
+    
     def update_team_score(self):
         green_score = int(0)
         red_score = int(0)
@@ -205,10 +206,10 @@ class Player_Action():
                 green_score += int(green_to_add)
             if red_to_add != "":
                 red_score += int(red_to_add)
-        self.page_dict["Contents"]["GreenFrame"]["TeamScoreLabel"].config(str(green_score))
-        self.page_dict["Contents"]["RedFrame"]["TeamScoreLabel"].config(str(red_score))
+        self.page_dict["Contents"]["GreenFrame"]["TeamScoreLabel"].config(text = str(green_score))
+        self.page_dict["Contents"]["RedFrame"]["TeamScoreLabel"].config(text =str(red_score))
 
-        self.page_dict["Contents"]["GreenFrame"]["Frame"].after(500, self.update_team_score)'''
+        self.page_dict["Contents"]["GreenFrame"]["Frame"].after(500, self.update_team_score)
 
     def read_scoreboard(self):
         '''Reads in the scoreboard information from the scoreboard object'''
@@ -221,7 +222,6 @@ class Player_Action():
                 green_list.append(player_list[n])
             elif player_list[n][2] == 2:
                 red_list.append(player_list[n])
-
         self.read_player_data(green_list, "GreenPlayerFrame")
         self.read_player_data(red_list, "RedPlayerFrame")
 
@@ -421,7 +421,6 @@ class Player_Action():
                 self.page_dict["Contents"][k][l].flash()
         self.page_dict["Window"].after(1, self.check_flash)
         self.read_scoreboard()
-        # print(self.scoreboard.dictionary)
         self.page_dict["Contents"]["HitFeedFrame"].build_hashtable(
             self.scoreboard.dictionary)
         # self.update_team_score()

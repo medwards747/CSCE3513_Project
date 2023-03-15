@@ -6,7 +6,7 @@ class Player():
         self.team = team
         self.player_num = player_num
     
-    def change_score(self, score):
+    def change_score(self, score= 100):
         self.score += score
 
 
@@ -49,8 +49,8 @@ class Scoreboard():
         self.change_score(id = hit_id, score = hit_loss)
 
     def change_score(self, id, score):
-        for n in range(len(self.players)):
-            if self.players[n].id == id:
+        for n in range(0,len(self.players)):
+            if str(self.players[n].id) == str(id):
                 self.players[n].change_score(score)
 
     def _build(self):
