@@ -84,13 +84,23 @@ class NetworkReceiver:
         self._s = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
         self._s.bind((self._listen_address, self._listen_port))
 
-        while not self._stop_flag.value:
+        should_stop = True
+        try:
+            should_stop = self._stop_flag.value
+        except BrokenPipeError:
+            self._s.close()
+            return
+        while not should_stop:
             ready_to_read, _, _ = select.select([self._s], [], [], 0.5)
             if ready_to_read:
                 data, client_address = self._s.recvfrom(1024)
                 self._logger.debug(
                     f"Network receiver got {data} from {client_address}")
                 self._result_queue.put(data)
+            try:
+                should_stop = self._stop_flag.value
+            except BrokenPipeError:
+                break
 
         self._s.close()
 
