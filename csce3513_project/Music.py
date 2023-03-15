@@ -78,6 +78,11 @@ class musicPlay():
             chosenTrack = "Track 7"
             self.selection = 6
             self.play(self.track_paths[6])
+        elif widget == self._button_8:
+            print('Track 8')
+            chosenTrack = "Track 8"
+            self.selection = 7
+            self.play(self.track_paths[7])
         return chosenTrack
 
     def show_gui(self) -> None:
