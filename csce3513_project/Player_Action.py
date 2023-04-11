@@ -8,9 +8,9 @@ class Flash_Capable_Label(Label):
 
     def __init__(self, original="gray34", flash_bg="white", delay=1000, **kwrds):
         super().__init__(**kwrds)
-        self.delay = delay  # time in ms to flash
-        self.current_flash_state = False  # bool to track if should be flashing
-        self.flash_state = False  # bool to track current state
+        self.delay = delay
+        self.current_flash_state = False
+        self.flash_state = False
         self.original_bg = original
         self.flash_bg = flash_bg
 
@@ -67,10 +67,15 @@ class Timer_Label(Label):
 class Hit_Feed(Frame):
     '''Frame that holds 45 labels split into three sections, each to hold a string and be supplied a color
 
+    Args: team_dictionary - takes the dictionary that was created in the team entry page for creation of hashtable of colors and player ids
+
+    Notes: Hit_Feed appends hits to the end of the list_of_hits list that is then read into the list of labels in reverse order to create the falling effect.
+
     '''
 
     def __init__(self, team_dictionary, **kwrds):
-        self.player_name_label_settings = {  # player labels different anchor depending on side needs changed during creation
+
+        self.player_name_label_settings = { 
             "padx": 2,
             "pady": 2,
             "bg": "gray34",
@@ -78,14 +83,16 @@ class Hit_Feed(Frame):
             "height": 1,
             "font": ("Arial", 10)}
 
-        self.hit_label_settings = {"padx": 2,
-                                   "pady": 2,
-                                   "bg": "gray34",
-                                   "fg": "CadetBlue1",
-                                   "anchor": CENTER,
-                                   "width": 7,
-                                   "height": 1,
-                                   "font": ("Arial", 10)}
+        self.hit_label_settings = {
+            "padx": 2,
+            "pady": 2,
+            "bg": "gray34",
+            "fg": "CadetBlue1",
+            "anchor": CENTER,
+            "width": 7,
+            "height": 1,
+            "font": ("Arial", 10)}
+
         super().__init__(**kwrds)
         self.team_dictionary = team_dictionary
         self.list_of_hits = []
@@ -105,12 +112,12 @@ class Hit_Feed(Frame):
             self.right_labels[n].grid(row=n, column=2)
 
     def build_hashtable(self, dictionary):
+        '''Builds the hashtable for easy creation of hits when needed
+        
+        Args: dictionary: takes in the team_dictionary from init that was created on team entry page'''
         self.hashtable = {}
         for k in dictionary:
-            # for key in dictionary
             for n in range(0, 15):
-                # for the 15 lists within the list the key grabs
-                # dictionary[k][n][0] returns the id of each player
                 player_id = str(dictionary[k][n][0])
                 code_name = str(dictionary[k][n][1])
                 self.hashtable[player_id] = [0] * 2
@@ -121,6 +128,7 @@ class Hit_Feed(Frame):
                     self.hashtable[player_id][1] = "red"
 
     def process_hit(self, tuple):
+        '''Takes in tuple of ids from network process and creates a hit using the hashtable to append appropriate values'''
         shooter_id = str(tuple[0])
         hit_id = str(tuple[1])
         hit = []
@@ -131,15 +139,18 @@ class Hit_Feed(Frame):
         self.add_hit(hit)
 
     def add_hit(self, hit):
+        '''Adds a created hit to the list_of_hits then calls for an update to the hitfeed'''
         self.list_of_hits.append(hit)
         self.update_hitfeed()
 
     def add_hits(self, hits):
+        """Takes a list of hits appends them to the list_of_hits then calls for an update to the hitfeed"""
         for n in range(len(hits)):
             self.list_of_hits.append(hits[n])
         self.update_hitfeed()
 
     def update_hitfeed(self):
+        '''Reads in from the end of the list_of_hits to update the hitfeed and create a falling effect'''
         if len(self.list_of_hits) < 15:
             for n in range(len(self.list_of_hits)):
                 enum = -(n+1)
@@ -185,7 +196,6 @@ class Player_Action():
                     hit_id=hit_id, shooter_id=shooter_id, hit_loss=0, shooter_gain=100)
                 self.read_scoreboard()
                 self.update_team_score()
-                # self.update_team_score()
         self.page_dict["Window"].after(333, self.gameplay_loop)
 
     def test_hit(self, event):
@@ -323,13 +333,11 @@ class Player_Action():
                                      "relief": RAISED
                                      }
 
-        # initialize structure of tk window
         self.page_dict = {}
         self.page_dict["Window"] = Tk()
         self.page_dict["Contents"] = {}
         self.page_dict["Window"].config(bg="gray24")
 
-        # list of frame names
         frame_list = ["GreenFrame",
                       "RedFrame",
                       "GreenPlayerFrame",
@@ -338,7 +346,6 @@ class Player_Action():
             self.page_dict["Contents"][k] = {
                 "Frame": Frame(self.page_dict["Window"])}
 
-        # add reliefs to all frames with border width to make it visible
         for k in frame_list:
             self.page_dict["Contents"][k]["Frame"].config(relief=RAISED, bd=5)
 
@@ -409,11 +416,6 @@ class Player_Action():
         self.page_dict["Contents"]["HitFeedFrame"] = Hit_Feed(
             team_dictionary={}, master=self.page_dict["Window"], bd=5, relief=RAISED)
         self.page_dict["Contents"]["HitFeedFrame"].grid(row=1, column=1)
-
-        # mainloop ---------------------------------------------------------------------------------------
-
-        # test keypress, remove later
-        self.page_dict["Window"].bind("<Key>", self.test_hit)
         outer = ["GreenFrame", "RedFrame"]
         inner = ["TeamNameLabel", "TeamScoreLabel"]
         for k in outer:
@@ -423,9 +425,6 @@ class Player_Action():
         self.read_scoreboard()
         self.page_dict["Contents"]["HitFeedFrame"].build_hashtable(
             self.scoreboard.dictionary)
-        # self.update_team_score()
-        self.page_dict["Contents"]["HitFeedFrame"].add_hits(
-            [["Opus", "limegreen", "Matt", "red"]])
         self.page_dict["Window"].after(1, self.gameplay_loop)
         Music.musicPlay(self.music_selection)
         self.page_dict["Window"].mainloop()
