@@ -8,7 +8,7 @@ class Database_Interface:
     supabase: Client = create_client(url, key)
 
     def searchID(self, id):
-        result = self.supabase.table("player").select("*").eq("id",id).explain().execute().data
+        result = self.supabase.table("player").select("*").eq("id",id).execute().data
         if result == []:
             return(False)
         else:
