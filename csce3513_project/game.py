@@ -1,10 +1,14 @@
 class Player():
-    def __init__(self, player_num, id, name, score, team):
+    def __init__(self, player_num, id, name, team, score = 0):
         self.id = id
         self.name = name
         self.score = score
         self.team = team
         self.player_num = player_num
+    
+    def change_score(self, score= 100):
+        self.score += score
+
 
 
 class Team():
@@ -24,20 +28,30 @@ class Scoreboard():
 
         self.teams.append(Team(1, "GREEN TEAM"))
         self.teams.append(Team(2, "RED TEAM"))
-
+        self.dictionary = dictionary
         self.read_dictionary(dictionary)
         self._build()
 
     def add_player(self, ID, NAME, TEAM):
+        print("attempting to add player")
         if not ((ID == "Empty ID") or (NAME == "Empty Slot")):
             self.player_count += 1
-            self.players.append(Player(self.player_count, ID, NAME, 0, TEAM))
+            self.players.append(Player(self.player_count, ID, NAME, TEAM, 0))
     
     def export_scoreboard(self):
         player_list = []
         for m in range(0,self.teams[0].num_players + self.teams[1].num_players):
             player_list.append([self.players[m].name, self.players[m].score, self.players[m].team])
         return player_list
+    
+    def hit_process(self, hit_id, shooter_id, hit_loss = 0, shooter_gain = 100):
+        self.change_score(id = shooter_id, score = shooter_gain)
+        self.change_score(id = hit_id, score = hit_loss)
+
+    def change_score(self, id, score):
+        for n in range(0,len(self.players)):
+            if str(self.players[n].id) == str(id):
+                self.players[n].change_score(score)
 
     def _build(self):
         for player in self.players:
@@ -83,18 +97,17 @@ class Scoreboard():
 
     def read_dictionary(self, dictionary):
         # read_dictionary() will be used to read player data and add to scoreboard from page.py
-        for green in dictionary:
-            if (green == "Green"):
+        for key in dictionary:
+            if (key == "Green"):
                 for n in range(0, 15):
-                    if dictionary[green][n][0] != "Empty ID":
+                    if dictionary[key][n][0] != "Empty ID":
                         self.add_player(
-                            dictionary[green][n][0], dictionary[green][n][1], 1)
-        for red in dictionary:
-            if (red == "Red"):
+                            ID = dictionary[key][n][0], NAME = dictionary[key][n][1], TEAM = 1)
+            elif (key == "Red"):
                 for n in range(0, 15):
-                    if dictionary[red][n][0] != "Empty ID":
+                    if dictionary[key][n][0] != "Empty ID":
                         self.add_player(
-                            dictionary[red][n][0], dictionary[red][n][1], 2)
+                            ID = dictionary[key][n][0], NAME = dictionary[key][n][1], TEAM = 2)
 
     def update_score(self, player_id, score):
         for player in self.players:

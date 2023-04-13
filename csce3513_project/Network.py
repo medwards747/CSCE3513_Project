@@ -1,6 +1,6 @@
 import logging
 import socket
-import multiprocessing
+import multiprocessing as mp
 import select
 from queue import Empty
 from typing import Union
@@ -68,9 +68,9 @@ class NetworkReceiver:
         self._listen_address = listen_address
         self._listen_port = listen_port
         self._run = True
-        self._manager = multiprocessing.Manager()
-        self._stop_flag = self._manager.Value("B", 0)
-        self._result_queue = self._manager.Queue()
+        manager = mp.Manager()
+        self._stop_flag = manager.Value("B", 0)
+        self._result_queue = manager.Queue()
         self._logger = logging.getLogger()
 
         # Start the server when object is created
@@ -84,13 +84,23 @@ class NetworkReceiver:
         self._s = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
         self._s.bind((self._listen_address, self._listen_port))
 
-        while not self._stop_flag.value:
+        should_stop = True
+        try:
+            should_stop = self._stop_flag.value
+        except BrokenPipeError:
+            self._s.close()
+            return
+        while not should_stop:
             ready_to_read, _, _ = select.select([self._s], [], [], 0.5)
             if ready_to_read:
                 data, client_address = self._s.recvfrom(1024)
                 self._logger.debug(
                     f"Network receiver got {data} from {client_address}")
                 self._result_queue.put(data)
+            try:
+                should_stop = self._stop_flag.value
+            except BrokenPipeError:
+                break
 
         self._s.close()
 
@@ -99,7 +109,7 @@ class NetworkReceiver:
         """
         self._logger.debug(
             f"Network receiver starting on {self._listen_address}:{self._listen_port}")
-        self._t = multiprocessing.Process(target=self._rx)
+        self._t = mp.Process(target=self._rx)
 
         self._t.start()
 
@@ -133,6 +143,8 @@ class NetworkReceiver:
                 result = self._result_queue.get(block=block, timeout=timeout)
                 result = result.decode()
                 result = result.split(":")
+                if len(result) != 2:
+                    raise IndexError
                 id_transmit = int(result[0])
                 id_hit = int(result[1])
             except Empty:

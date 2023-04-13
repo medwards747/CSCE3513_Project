@@ -7,10 +7,12 @@ if __name__ == '__main__':
 
     Splash.Splash()
     gui = Page.Page()
-    player_data = gui.createTeamEntryPage()
+    player_data, music_selection = gui.createTeamEntryPage()
     scoreboard = game.Scoreboard(player_data)
 
-    gui = Player_Action.Player_Action(scoreboard = scoreboard)
+
+    gui = Player_Action.Player_Action(scoreboard, music_selection)
+
     gui.create_play_action()
 
     scoreboard.display_teams()

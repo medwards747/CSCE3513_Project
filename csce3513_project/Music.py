@@ -21,9 +21,9 @@ class musicPlay():
         This function hard codes in different cuts for each mp3 file.
         '''
 
-        if file == self.path[4]:
+        if file == self.track_paths[4]:
             return (self.get_len(file) - 30)
-        elif (file == self.path[5] or file == self.path[6]):
+        elif (file == self.track_paths[5] or file == self.track_paths[6]):
             return (self.get_len(file) / 3)
         else:
             return (300)
@@ -37,44 +37,61 @@ class musicPlay():
     def pause(self):
         pygame.mixer.music.pause()
 
+    def get_selection(self):
+        return self.selection
+
     # register a Button being pressed
     def clicked(self, widget):
         chosenTrack = "Random"
         if widget == self._button_1:
             print('Track 1')
             chosenTrack = "Track 1"
-            self.play(self.path[0])
+            self.selection = 0
+            self.play(self.track_paths[0])
         elif widget == self._button_2:
             print('Track 2')
             chosenTrack = "Track 2"
-            self.play(self.path[1])
+            self.selection = 1
+            self.play(self.track_paths[1])
         elif widget == self._button_3:
             print('Track 3')
             chosenTrack = "Track 3"
-            self.play(self.path[2])
+            self.selection = 2
+            self.play(self.track_paths[2])
         elif widget == self._button_4:
             print('Track 4')
             chosenTrack = "Track 4"
-            self.play(self.path[3])
+            self.selection = 3
+            self.play(self.track_paths[3])
         elif widget == self._button_5:
             print('Track 5')
             chosenTrack = "Track 5"
-            self.play(self.path[4])
+            self.selection = 4
+            self.play(self.track_paths[4])
         elif widget == self._button_6:
             print('Track 6')
             chosenTrack = "Track 6"
-            self.play(self.path[5])
+            self.selection = 5
+            self.play(self.track_paths[5])
         elif widget == self._button_7:
             print('Track 7')
             chosenTrack = "Track 7"
-            self.play(self.path[6])
+            self.selection = 6
+            self.play(self.track_paths[6])
+        elif widget == self._button_8:
+            print('Track 8')
+            chosenTrack = "Track 8"
+            self.selection = 7
+            self.play(self.track_paths[7])
         return chosenTrack
 
-    def __init__(self) -> None:
+    def show_gui(self) -> None:
         # creates music selection window
         self.win = Toplevel()
         self.win.title("Music Selection")
 
+        # Start 1st track
+        self.play(self.track_paths[0])
 
         width, height = 1000, 700
         screen_width = self.win.winfo_screenwidth()
@@ -84,7 +101,7 @@ class musicPlay():
 
         # adjust where it pops up
         self.win.geometry("%dx%d+%d+%d" %
-                           (width, height, x_coordinate, y_coordinate))
+                          (width, height, x_coordinate, y_coordinate))
 
 
         im = Image.open("csce3513_project/images/lazer_tag_bg.png")
@@ -168,3 +185,21 @@ class musicPlay():
         self.p.grid(row=2, ipady=10, pady=10)
 
         self.win.mainloop()
+     
+        # Stop the music
+        pygame.mixer.music.stop()
+
+    def __init__(self, track: int, autoplay=True) -> None:
+        # initialize music player
+        pygame.init()
+        self.selection = None
+
+        # list all music tracks
+        track_dir = 'csce3513_project/photon_tracks/'
+        tracks = os.listdir(track_dir)
+        self.track_paths = [track_dir + i for i in tracks]
+        # default music selection
+        pygame.mixer.music.load(self.track_paths[track])
+        if autoplay:
+            pygame.mixer.music.play()
+
