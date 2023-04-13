@@ -242,12 +242,12 @@ class Page():
         return (self.newPlayerName)
 
     def runMusicWin(self):
-        ''' If music selection button is pressed Music Selection Window will run
-            This does not work correctly yet btw. Still need to figure out how to overide using .pack and .grid.'''
+        ''' If music selection button is pressed Music Selection Window will run'''
 
         runMusic = musicPlay(random.randint(0, 7))
         runMusic.show_gui()
         return runMusic
+
 
     def createTeamEntryPage(self):
         '''Creates team_dictionary for reference, page, a dictionary containing all tk elements
