@@ -109,7 +109,6 @@ class musicPlay():
 
         self.bg = Label(self.win, image=render)
         self.bg.image = render
-
         self.bg.grid(row=0, column=0, rowspan=2, columnspan=3)
 
         # initialize music player
@@ -117,9 +116,7 @@ class musicPlay():
 
         # list all music tracks
         tracks = os.listdir('csce3513_project/photon_tracks')
-        print(tracks)
         self.path = ['csce3513_project/photon_tracks/' + i for i in tracks]
-        print(self.path)
         # default music selection
         pygame.mixer.music.load(self.path[0])
         pygame.mixer.music.play(start=300)
@@ -130,8 +127,7 @@ class musicPlay():
         self.win.grid_columnconfigure(1, weight=1)
         self.win.grid_columnconfigure(2, weight=1)
 
-        top = Frame(self.win).grid(row=0)
-        heading = Label(top, text="Select the Music Track", font=('Times', 50), fg='dark blue')
+        heading = Label(self.win, text="Select the Music Track", font=('Times', 50), fg='dark blue')
         heading.grid(row=0, column=0,columnspan=3,sticky='NSEW')
         left = Frame(self.win, bg='dark blue')
         left.grid(row=1, column=0, padx=5, pady=100, sticky='NS')
