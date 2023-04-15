@@ -33,9 +33,9 @@ Python 3 project to receive and send events from laser tag guns via UDP and keep
    virtualenv -p python3 venv
    source venv/bin/activate
    ```
-   
+
    alternatively for conda users (optional)
-   
+
    ```bash
    conda create -n py310 python=3.10
    conda activate py310
@@ -68,6 +68,34 @@ Python 3 project to receive and send events from laser tag guns via UDP and keep
 ```bash
 python3 -m csce3513_gui
 ```
+
+### Generating Traffic
+
+Run while the game is running.
+
+#### Using the Python script
+
+```bash
+python3 ./python_traffic_generator.py
+```
+
+And follow the prompts.
+
+#### Using netcat
+
+```bash
+nc -u 127.0.0.1 7501
+```
+
+Change IP address and port as needed.
+
+Then type in the event you want to send. For example:
+
+```bash
+1:2
+```
+
+will send a hit event from player ID 1 to player ID 2.
 
 ## Development
 
