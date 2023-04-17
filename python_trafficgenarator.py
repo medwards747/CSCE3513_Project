@@ -41,6 +41,6 @@ for i in range(int(counter)):
 
     print(message)
     UDPClientSocketTransmit.sendto(str.encode(str(message)), serverAddressPort)
-    # time.sleep(random.randint(1,3))
+    time.sleep(random.randint(1, 3))
 
 print("program complete")
