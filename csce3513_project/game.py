@@ -45,6 +45,17 @@ class Scoreboard():
         return player_list
 
     def hit_process(self, hit_id, shooter_id, hit_loss=0, shooter_gain=10):
+        # Check if hit_id is on the same team as shooter_id
+        hit_team = "1"
+        shooter_team = "1"
+        for n in range(0, len(self.players)):
+            if str(self.players[n].id) == str(shooter_id):
+                shooter_team = self.players[n].team
+        for n in range(0, len(self.players)):
+            if str(self.players[n].id) == str(hit_id):
+                hit_team = self.players[n].team
+        if (shooter_team == hit_team):
+            shooter_gain = -shooter_gain
         self.change_score(id=shooter_id, score=shooter_gain)
         self.change_score(id=hit_id, score=hit_loss)
 
