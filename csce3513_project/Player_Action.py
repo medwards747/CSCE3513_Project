@@ -41,24 +41,30 @@ class Flash_Capable_Label(Label):
 
 class Timer_Label(Label):
 
-    def __init__(self, timer_start=361, **kwrds):
+    def __init__(self, timer_start=391, **kwrds):
         super().__init__(**kwrds)
         self.time_remaining = timer_start
         self.minutes = self.time_remaining // 60
         self.seconds = self.time_remaining % 60
-        self.config(text=str(self.minutes) + ":" + str(self.seconds))
+        self.config(text=str(self.seconds))
 
         def updateGUI():
             if self.time_remaining > 0:
                 self.time_remaining -= 1
                 self.minutes = self.time_remaining // 60
                 self.seconds = self.time_remaining % 60
-                if self.seconds < 10:
+                if self.time_remaining > 360:
+                    self.config(text=str(self.seconds))
+                elif self.seconds < 10:
                     self.config(text=str(self.minutes) +
                                 ":" + "0" + str(self.seconds))
                 else:
                     self.config(text=str(self.minutes) +
                                 ":" + str(self.seconds))
+                if self.seconds == 0 and self.minutes == 0:
+                    Player_Action.game_running = False
+                elif self.seconds == 0 and self.minutes == 6:
+                    Player_Action.game_running = True
                 self.after(1000, updateGUI)
 
         updateGUI()
@@ -75,7 +81,7 @@ class Hit_Feed(Frame):
 
     def __init__(self, team_dictionary, **kwrds):
 
-        self.player_name_label_settings = { 
+        self.player_name_label_settings = {
             "padx": 2,
             "pady": 2,
             "bg": "gray34",
@@ -113,7 +119,7 @@ class Hit_Feed(Frame):
 
     def build_hashtable(self, dictionary):
         '''Builds the hashtable for easy creation of hits when needed
-        
+
         Args: dictionary: takes in the team_dictionary from init that was created on team entry page'''
         self.hashtable = {}
         for k in dictionary:
@@ -170,6 +176,7 @@ class Hit_Feed(Frame):
 
 
 class Player_Action():
+    game_running = False
 
     def __init__(self, scoreboard, music_selection) -> None:
 
@@ -179,7 +186,11 @@ class Player_Action():
         self.Sender = NetworkSender()
 
     def gameplay_loop(self):
+        # Only process results when the timer is running
         results = self.Reciever.process_results()
+        if not Player_Action.game_running:
+            results = []
+
         if len(results) > 0:
             for result in results:
                 shooter_id = result[0]
@@ -205,21 +216,26 @@ class Player_Action():
         rand = random.randint(0, 2)
 
         self.page_dict["Contents"]["HitFeedFrame"].add_hit(test_list[rand])
-    
+
     def update_team_score(self):
         green_score = int(0)
         red_score = int(0)
-        for n in range(0,15):
-            green_to_add = self.page_dict["Contents"]["GreenPlayerFrame"]["ScoreLabelList"][n].cget("text")
-            red_to_add = self.page_dict["Contents"]["RedPlayerFrame"]["ScoreLabelList"][n].cget("text")
+        for n in range(0, 15):
+            green_to_add = self.page_dict["Contents"]["GreenPlayerFrame"]["ScoreLabelList"][n].cget(
+                "text")
+            red_to_add = self.page_dict["Contents"]["RedPlayerFrame"]["ScoreLabelList"][n].cget(
+                "text")
             if green_to_add != "":
                 green_score += int(green_to_add)
             if red_to_add != "":
                 red_score += int(red_to_add)
-        self.page_dict["Contents"]["GreenFrame"]["TeamScoreLabel"].config(text = str(green_score))
-        self.page_dict["Contents"]["RedFrame"]["TeamScoreLabel"].config(text =str(red_score))
+        self.page_dict["Contents"]["GreenFrame"]["TeamScoreLabel"].config(
+            text=str(green_score))
+        self.page_dict["Contents"]["RedFrame"]["TeamScoreLabel"].config(
+            text=str(red_score))
 
-        self.page_dict["Contents"]["GreenFrame"]["Frame"].after(500, self.update_team_score)
+        self.page_dict["Contents"]["GreenFrame"]["Frame"].after(
+            500, self.update_team_score)
 
     def read_scoreboard(self):
         '''Reads in the scoreboard information from the scoreboard object'''
@@ -329,7 +345,7 @@ class Player_Action():
                                      "height": 1,
                                      "font": ("Arial", 25),
                                      "fg": "CadetBlue1",
-                                     "timer_start": 361,
+                                     "timer_start": 391,
                                      "relief": RAISED
                                      }
 
@@ -426,5 +442,5 @@ class Player_Action():
         self.page_dict["Contents"]["HitFeedFrame"].build_hashtable(
             self.scoreboard.dictionary)
         self.page_dict["Window"].after(1, self.gameplay_loop)
-        Music.musicPlay(self.music_selection)
+        Music.musicPlay(self.music_selection, delay=13.0)
         self.page_dict["Window"].mainloop()

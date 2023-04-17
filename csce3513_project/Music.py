@@ -1,3 +1,5 @@
+import threading
+import time
 import tkinter
 from tkinter import *
 import pygame
@@ -103,7 +105,6 @@ class musicPlay():
         self.win.geometry("%dx%d+%d+%d" %
                           (width, height, x_coordinate, y_coordinate))
 
-
         im = Image.open("csce3513_project/images/lazer_tag_bg.png")
         render = ImageTk.PhotoImage(im)
 
@@ -127,8 +128,9 @@ class musicPlay():
         self.win.grid_columnconfigure(1, weight=1)
         self.win.grid_columnconfigure(2, weight=1)
 
-        heading = Label(self.win, text="Select the Music Track", font=('Times', 50), fg='dark blue')
-        heading.grid(row=0, column=0,columnspan=3,sticky='NSEW')
+        heading = Label(self.win, text="Select the Music Track",
+                        font=('Times', 50), fg='dark blue')
+        heading.grid(row=0, column=0, columnspan=3, sticky='NSEW')
         left = Frame(self.win, bg='dark blue')
         left.grid(row=1, column=0, padx=5, pady=100, sticky='NS')
         middle = Frame(self.win, bg='dark blue')
@@ -137,55 +139,76 @@ class musicPlay():
         right.grid(row=1, column=2, padx=5, pady=100, sticky='NS')
 
         # create all buttons
-        self._button_1 = Button(left, text='Track 1', font=('Times', 32), fg='dark blue', width=10)
-        self._button_1.config(command=lambda obj=self._button_1: self.clicked(obj))
+        self._button_1 = Button(left, text='Track 1', font=(
+            'Times', 32), fg='dark blue', width=10)
+        self._button_1.config(
+            command=lambda obj=self._button_1: self.clicked(obj))
         self._button_1.bind('<<Track 1 Selected>>', self.clicked)
         self._button_1.grid(row=0, ipady=10, pady=10)
 
-        self._button_2 = Button(left, text='Track 2', font=('Times', 32), fg='dark blue', width=10)
-        self._button_2.config(command=lambda obj=self._button_2: self.clicked(obj))
+        self._button_2 = Button(left, text='Track 2', font=(
+            'Times', 32), fg='dark blue', width=10)
+        self._button_2.config(
+            command=lambda obj=self._button_2: self.clicked(obj))
         self._button_2.bind('<<Track 2 Selected>>', self.clicked)
         self._button_2.grid(row=1, ipady=10, pady=10)
 
-        self._button_3 = Button(left, text='Track 3', font=('Times', 32), fg='dark blue', width=10)
-        self._button_3.config(command=lambda obj=self._button_3: self.clicked(obj))
+        self._button_3 = Button(left, text='Track 3', font=(
+            'Times', 32), fg='dark blue', width=10)
+        self._button_3.config(
+            command=lambda obj=self._button_3: self.clicked(obj))
         self._button_3.bind('<<Track 3 Selected>>', self.clicked)
         self._button_3.grid(row=2, ipady=10, pady=10)
 
-        self._button_4 = Button(middle, text='Track 4', font=('Times', 32), fg='dark blue', width=10)
-        self._button_4.config(command=lambda obj=self._button_4: self.clicked(obj))
+        self._button_4 = Button(middle, text='Track 4', font=(
+            'Times', 32), fg='dark blue', width=10)
+        self._button_4.config(
+            command=lambda obj=self._button_4: self.clicked(obj))
         self._button_4.bind('<<Track 4 Selected>>', self.clicked)
         self._button_4.grid(row=0, ipady=10, pady=10)
 
-        self._button_5 = Button(middle, text='Track 5', font=('Times', 32), fg='dark blue', width=10)
-        self._button_5.config(command=lambda obj=self._button_5: self.clicked(obj))
+        self._button_5 = Button(middle, text='Track 5', font=(
+            'Times', 32), fg='dark blue', width=10)
+        self._button_5.config(
+            command=lambda obj=self._button_5: self.clicked(obj))
         self._button_5.bind('<<Track 5 Selected>>', self.clicked)
         self._button_5.grid(row=1, ipady=10, pady=10)
 
-        self._button_6 = Button(middle, text='Track 6', font=('Times', 32), fg='dark blue', width=10)
-        self._button_6.config(command=lambda obj=self._button_6: self.clicked(obj))
+        self._button_6 = Button(middle, text='Track 6', font=(
+            'Times', 32), fg='dark blue', width=10)
+        self._button_6.config(
+            command=lambda obj=self._button_6: self.clicked(obj))
         self._button_6.bind('<<Track 6 Selected>>', self.clicked)
         self._button_6.grid(row=2, ipady=10, pady=10)
 
-        self._button_7 = Button(right, text='Track 7', font=('Times', 32), fg='dark blue', width=10)
-        self._button_7.config(command=lambda obj=self._button_7: self.clicked(obj))
+        self._button_7 = Button(right, text='Track 7', font=(
+            'Times', 32), fg='dark blue', width=10)
+        self._button_7.config(
+            command=lambda obj=self._button_7: self.clicked(obj))
         self._button_7.bind('<<Track 7 Selected>>', self.clicked)
         self._button_7.grid(row=0, ipady=10, pady=10)
 
-        self._button_8 = Button(right, text='Track 8', font=('Times', 32), fg='dark blue', width=10)
-        self._button_8.config(command=lambda obj=self._button_8: self.clicked(obj))
+        self._button_8 = Button(right, text='Track 8', font=(
+            'Times', 32), fg='dark blue', width=10)
+        self._button_8.config(
+            command=lambda obj=self._button_8: self.clicked(obj))
         self._button_8.bind('<<Track 8 Selected>>', self.clicked)
         self._button_8.grid(row=1, ipady=10, pady=10)
 
-        self.p = Button(right, text='pause', font=('Times', 32), command=self.pause, fg='dark blue', width=10)
+        self.p = Button(right, text='pause', font=('Times', 32),
+                        command=self.pause, fg='dark blue', width=10)
         self.p.grid(row=2, ipady=10, pady=10)
 
         self.win.mainloop()
-     
+
         # Stop the music
         pygame.mixer.music.stop()
 
-    def __init__(self, track: int, autoplay=True) -> None:
+    def _wait(self, delay: float) -> None:
+        time.sleep(delay)
+        pygame.mixer.music.play()
+
+    def __init__(self, track: int, autoplay=True, delay: float = 0) -> None:
         # initialize music player
         pygame.init()
         self.selection = None
@@ -197,5 +220,6 @@ class musicPlay():
         # default music selection
         pygame.mixer.music.load(self.track_paths[track])
         if autoplay:
-            pygame.mixer.music.play()
-
+            # Wait for delay seconds on another thread
+            t = threading.Thread(target=self._wait, args=(delay,))
+            t.start()
