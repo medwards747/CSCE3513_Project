@@ -55,7 +55,7 @@ Python 3 project to receive and send events from laser tag guns via UDP and keep
    pip3 install -e .
    ```
 
-   For production (does not automatically update)):
+   For production (does not automatically update):
 
    ```bash
    pip3 install .
