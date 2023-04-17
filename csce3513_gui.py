@@ -10,10 +10,6 @@ if __name__ == '__main__':
     player_data, music_selection = gui.createTeamEntryPage()
     scoreboard = game.Scoreboard(player_data)
 
-
     gui = Player_Action.Player_Action(scoreboard, music_selection)
 
     gui.create_play_action()
-
-    scoreboard.display_teams()
-
