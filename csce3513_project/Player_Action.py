@@ -204,7 +204,7 @@ class Player_Action():
                     return
                 self.Sender.send_hit_player(hit_id)
                 self.scoreboard.hit_process(
-                    hit_id=hit_id, shooter_id=shooter_id, hit_loss=0, shooter_gain=100)
+                    hit_id=hit_id, shooter_id=shooter_id, hit_loss=0, shooter_gain=10)
                 self.read_scoreboard()
                 self.update_team_score()
         self.page_dict["Window"].after(333, self.gameplay_loop)
